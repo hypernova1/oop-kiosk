@@ -1,49 +1,29 @@
-package kr.co._29cm.homework.util;
+package kr.co._29cm.homework.util.csv;
 
-import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
- * CSV 파일을 기반으로 인스턴스를 생성하는 유틸 클래스
- */
-public class CsvInstanceConvertor {
-
-    /**
-     * 주어진 경로에 존재하는 CSV를 기반으로 인스턴스 목록을 생성한다.
-     *
-     * @param filePath CSV 파일 경로
-     * @param clazz 변환할 클래스 타입
-     * @return 인스턴스 목록
-     * */
-    public static <T> List<T> createInstances(String filePath, Class<T> clazz) {
-        InputStream inputStream = getInputStreamFromPath(filePath);
-        return convertToInstances(inputStream, clazz);
-    }
+ * CSV 데이터를 인스턴스로 변환한다.
+ * */
+public class CsvToInstanceConvertor {
 
     /**
      * InputStream의 데이터로 인스턴스 목록을 생성한다.
      *
-     * @param inputStream CSV 인풋 스트림
+     * @param csvData CSV 인스턴스
      * @param clazz 변환할 클래스 타입
      * @return 인스턴스 목록
      * */
-    protected static <T> List<T> convertToInstances(InputStream inputStream, Class<T> clazz) {
+    public static <T> List<T> convertToInstances(CsvData csvData, Class<T> clazz) {
         List<T> instances = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            List<String> lines = reader.lines().toList();
-            String[] properties = lines.get(0).split(",");
-            for (int i = 1; i < lines.size(); i++) {
-                String[] csvColumnValues = lines.get(i).split(",");
-                T t = convertToInstance(csvColumnValues, Arrays.asList(properties), clazz);
+            for (int i = 0; i < csvData.getValues().size(); i++) {
+                T t = convertToInstance(csvData.getValues().get(i), csvData.getFields(), clazz);
                 instances.add(t);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
         return instances;
     }
 
@@ -87,7 +67,7 @@ public class CsvInstanceConvertor {
      * @return CSV 값
      * */
     private static String fineCsvValue(String[] csvColumnValues, List<String> csvProperties, Field field) {
-        CsvMatcher matcher = field.getDeclaredAnnotation(CsvMatcher.class);
+        CsvFieldMatcher matcher = field.getDeclaredAnnotation(CsvFieldMatcher.class);
         String fieldName = matcher != null ? matcher.value() : field.getName();
         int index = csvProperties.indexOf(fieldName);
         if (index == -1) {
@@ -115,20 +95,6 @@ public class CsvInstanceConvertor {
         }
 
         return value;
-    }
-
-    /**
-     * 주어진 경로에서 CSV 파일의 인풋스트림을 가져온다.
-     *
-     * @param path CSV 경로
-     * @return CSV 인풋 스트림
-     * */
-    protected static InputStream getInputStreamFromPath(String path) {
-        InputStream inputStream = ClassLoader.getSystemResourceAsStream(path);
-        if (inputStream == null) {
-            throw new RuntimeException("파일을 읽는 동안 오류가 발생했습니다.");
-        }
-        return inputStream;
     }
 
 }

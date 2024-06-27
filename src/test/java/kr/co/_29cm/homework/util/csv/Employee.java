@@ -1,11 +1,11 @@
-package kr.co._29cm.homework.util;
+package kr.co._29cm.homework.util.csv;
 
 public class Employee {
-    @CsvMatcher("이름")
+    @CsvFieldMatcher("이름")
     private String name;
-    @CsvMatcher("나이")
+    @CsvFieldMatcher("나이")
     private int age;
-    @CsvMatcher("직업")
+    @CsvFieldMatcher("직업")
     private String job;
 
     @Override
