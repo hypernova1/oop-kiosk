@@ -3,26 +3,35 @@ package kr.co._29cm.homework.util.csv;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * CSV 데이터를 인스턴스로 변환한다.
  * */
-public class CsvToInstanceConvertor {
+public class CsvToInstanceConvertor<T> {
+
+    private final List<String> fields;
+    private final List<String[]> values;
+    private final Class<T> clazz;
+
+    public CsvToInstanceConvertor(CsvData csvData, Class<T> clazz) {
+        this.fields = csvData.getFields();
+        this.values = csvData.getValues();
+        this.clazz = clazz;
+    }
 
     /**
      * InputStream의 데이터로 인스턴스 목록을 생성한다.
      *
-     * @param csvData CSV 인스턴스
-     * @param clazz 변환할 클래스 타입
      * @return 인스턴스 목록
      * */
-    public static <T> List<T> convertToInstances(CsvData csvData, Class<T> clazz) {
+    public List<T> convertToInstances() {
         List<T> instances = new ArrayList<>();
-            for (int i = 0; i < csvData.getValues().size(); i++) {
-                T t = convertToInstance(csvData.getValues().get(i), csvData.getFields(), clazz);
-                instances.add(t);
-            }
+        for (String[] value : this.values) {
+            T t = convertToInstance(value);
+            instances.add(t);
+        }
 
         return instances;
     }
@@ -31,17 +40,15 @@ public class CsvToInstanceConvertor {
      * 인스턴스를 생성한다.
      *
      * @param csvColumnValues CSV 레코드 내의 컬럼 값 목록
-     * @param csvProperties CSV 프로퍼티 목록
-     * @param clazz 변환할 클래스 타입
      * @return 인스턴스
      * */
-    protected static <T> T convertToInstance(String[] csvColumnValues, List<String> csvProperties, Class<T> clazz) {
+    private T convertToInstance(String[] csvColumnValues) {
         try {
             T instance = clazz.getConstructor().newInstance();
             Field[] fields = clazz.getDeclaredFields();
 
             for (Field field : fields) {
-                String csvValue = fineCsvValue(csvColumnValues, csvProperties, field);
+                String csvValue = fineCsvValue(csvColumnValues, field);
                 field.setAccessible(true);
                 field.set(instance, convertValue(field.getType(), csvValue));
                 field.setAccessible(false);
@@ -62,14 +69,13 @@ public class CsvToInstanceConvertor {
      * 필드와 일치하는 CSV 값을 찾는다.
      *
      * @param csvColumnValues CSV 레코드 내의 컬럼 값 목록
-     * @param csvProperties csv 프로퍼티 목록
      * @param field 인스턴스의 필드
      * @return CSV 값
      * */
-    private static String fineCsvValue(String[] csvColumnValues, List<String> csvProperties, Field field) {
+    private String fineCsvValue(String[] csvColumnValues, Field field) {
         CsvFieldMatcher matcher = field.getDeclaredAnnotation(CsvFieldMatcher.class);
         String fieldName = matcher != null ? matcher.value() : field.getName();
-        int index = csvProperties.indexOf(fieldName);
+        int index = this.fields.indexOf(fieldName);
         if (index == -1) {
             throw new RuntimeException("필드를 찾을 수 없습니다.");
         }
@@ -83,7 +89,7 @@ public class CsvToInstanceConvertor {
      * @param value 값 문자열
      * @return 변환된 값
      */
-    private static Object convertValue(Class<?> fieldType, String value) {
+    private Object convertValue(Class<?> fieldType, String value) {
         if (fieldType == int.class || fieldType == Integer.class) {
             return Integer.parseInt(value);
         } else if (fieldType == double.class || fieldType == Double.class) {

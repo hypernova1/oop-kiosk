@@ -1,4 +1,4 @@
-package kr.co._29cm.homework.product;
+package kr.co._29cm.homework.product.domain;
 
 import kr.co._29cm.homework.util.csv.CsvFieldMatcher;
 
@@ -16,8 +16,7 @@ public class Product {
     @CsvFieldMatcher("재고수량")
     private Integer quantity;
 
-
-    protected Product() {}
+    public Product() {}
 
     public String getProductNo() {
         return this.productNo;

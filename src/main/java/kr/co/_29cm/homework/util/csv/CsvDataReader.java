@@ -10,14 +10,21 @@ import java.util.List;
 
 public class CsvDataReader {
 
+    private final String filePath;
+
+    private static final String CSV_PATTERN = ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
+
+    public CsvDataReader(String filePath) {
+        this.filePath = filePath;
+    }
+
     /**
      * 주어진 경로에 존재하는 CSV를 기반으로 인스턴스 목록을 생성한다.
      *
-     * @param filePath CSV 파일 경로
      * @return CSV 인스턴스
      * */
-    public static CsvData readCsv(String filePath) {
-        InputStream inputStream = getInputStreamFromPath(filePath);
+    public CsvData readCsv() {
+        InputStream inputStream = getInputStreamFromPath();
         return readCsv(inputStream);
     }
 
@@ -27,13 +34,13 @@ public class CsvDataReader {
      * @param inputStream CSV 인풋 스트림
      * @return CSV 인스턴스
      * */
-    private static CsvData readCsv(InputStream inputStream) {
+    private CsvData readCsv(InputStream inputStream) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             List<String> lines = reader.lines().toList();
-            List<String> properties = Arrays.asList(lines.get(0).split(","));
+            List<String> properties = Arrays.asList(lines.get(0).split(CSV_PATTERN));
             List<String[]> values = new ArrayList<>();
             for (int i = 1; i < lines.size(); i++) {
-                String[] csvColumnValues = lines.get(i).split(",");
+                String[] csvColumnValues = lines.get(i).split(CSV_PATTERN);
                 values.add(csvColumnValues);
             }
 
@@ -49,8 +56,8 @@ public class CsvDataReader {
      * @param path CSV 경로
      * @return CSV 인풋 스트림
      * */
-    protected static InputStream getInputStreamFromPath(String path) {
-        InputStream inputStream = ClassLoader.getSystemResourceAsStream(path);
+    private InputStream getInputStreamFromPath() {
+        InputStream inputStream = ClassLoader.getSystemResourceAsStream(filePath);
         if (inputStream == null) {
             throw new RuntimeException("파일을 읽는 동안 오류가 발생했습니다.");
         }
