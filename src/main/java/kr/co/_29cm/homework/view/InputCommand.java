@@ -1,9 +1,9 @@
 package kr.co._29cm.homework.view;
 
 public enum InputCommand {
-    EXIT(" ", " "),
-    QUIT("q", "quit"),
-    CONTINUE_ORDER("o", "order");
+    COMPLETE_ORDER(" ", " "),
+    CONTINUE_ORDER("o", "order"),
+    QUIT("q", "quit");
 
     private final String fullCommand;
     private final String shortCommand;

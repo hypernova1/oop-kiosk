@@ -1,0 +1,75 @@
+package kr.co._29cm.homework.payment.domain;
+
+import kr.co._29cm.homework.order.domain.Order;
+import kr.co._29cm.homework.order.domain.OrderItem;
+import kr.co._29cm.homework.product.payload.ProductPriceInfo;
+
+import java.util.List;
+
+public class Payment {
+
+    private int productPrice;
+    private int shippingPrice;
+    private int totalPaidPrice;
+    private String orderNo;
+
+    /**
+     * 주문 데이터를 기반으로 결제 정보를 생성한다.
+     *
+     * @param order 주문 데이터
+     * @return 결제 정보
+     * */
+    public static Payment from(Order order) {
+        Payment payment = new Payment();
+        payment.orderNo = order.getOrderNo();
+        payment.productPrice = order.getTotalProductPrice();
+        payment.shippingPrice = order.isFreeShipping() ? 0 : 2500;
+        payment.totalPaidPrice = payment.productPrice + payment.shippingPrice;
+        payment.orderNo = order.getOrderNo();
+        return payment;
+    }
+
+    private int calculateProductPrice(List<OrderItem> orderItems, List<ProductPriceInfo> productPriceInfos) {
+        int totalProductPrice = 0;
+        for (OrderItem orderItem : orderItems) {
+            ProductPriceInfo productPriceInfo = productPriceInfos.stream()
+                    .filter((priceInfo -> orderItem.getProductNo().equals(priceInfo.productNo())))
+                    .findFirst()
+                    .orElseThrow(RuntimeException::new);
+
+            totalProductPrice += productPriceInfo.price() * orderItem.getQuantity();
+        }
+        return totalProductPrice;
+    }
+
+    /**
+     * 상품의 총 가격을 가져온다.
+     *
+     * @return 상품 총 금액
+     * */
+    public int getProductPrice() {
+        return this.productPrice;
+    }
+
+    /**
+     * 배송비를 가져온다.
+     *
+     * @return 배송비
+     * */
+    public int getShippingPrice() {
+        return this.shippingPrice;
+    }
+
+    /**
+     * 총 결제 금액을 가져온다.
+     *
+     * @return 총 결제 금액
+     * */
+    public int getTotalPaidPrice() {
+        return this.totalPaidPrice;
+    }
+
+    public String getOrderNo() {
+        return this.orderNo;
+    }
+}

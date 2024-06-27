@@ -13,11 +13,11 @@ class CsvDataReaderTest {
     void read_data() {
         CsvData csvData = new CsvDataReader("employee.csv").readCsv();
         assertThat(csvData).isNotNull();
-        assertThat(csvData.getFields()).hasSize(3);
-        assertThat(csvData.getValues()).hasSize(3);
-        assertThat(csvData.getFields().get(0)).isEqualTo("이름");
-        assertThat(csvData.getFields().get(1)).isEqualTo("나이");
-        assertThat(csvData.getFields().get(2)).isEqualTo("직업");
+        assertThat(csvData.getFieldNames()).hasSize(3);
+        assertThat(csvData.getRecords()).hasSize(3);
+        assertThat(csvData.getFieldNames().get(0)).isEqualTo("이름");
+        assertThat(csvData.getFieldNames().get(1)).isEqualTo("나이");
+        assertThat(csvData.getFieldNames().get(2)).isEqualTo("직업");
     }
 
     @Test

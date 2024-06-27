@@ -1,8 +1,8 @@
 package kr.co._29cm.homework.order.domain;
 
+import kr.co._29cm.homework.cart.domain.Cart;
 import kr.co._29cm.homework.cart.domain.CartProduct;
 import kr.co._29cm.homework.common.repository.PrimaryKey;
-import kr.co._29cm.homework.payment.Payment;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,32 +17,60 @@ public class Order {
 
     private final List<OrderItem> items = new ArrayList<>();
 
-    private Payment payment;
+    private static final int FREE_SHIPPING_THRESHOLD = 50_000;
 
     protected Order() {}
 
-    public static Order from(List<CartProduct> cartProducts) {
+    public static Order from(Cart cart) {
         Order order = new Order();
         order.orderNo = generateOrderNo();
-        order.setOrderItems(cartProducts, order);
+        order.setOrderItems(cart.getProducts());
         return order;
     }
 
-    private void setOrderItems(List<CartProduct> cartProducts, Order order) {
+    /**
+     * 장바구니 상품 목록을 기반으로 주문 아이템 목록을 생성한다.
+     *
+     * @param cartProducts 장바구니 상품 목록
+     * */
+    private void setOrderItems(List<CartProduct> cartProducts) {
         for (CartProduct cartProduct : cartProducts) {
             OrderItem orderItem = OrderItem.from(cartProduct);
-            order.items.add(orderItem);
+            this.items.add(orderItem);
         }
     }
 
+    /**
+     * 주문 번호를 가져온다.
+     * */
     public String getOrderNo() {
         return this.orderNo;
     }
 
+    /**
+     * 주문 아이템 목록을 가져온다.
+     * */
     public List<OrderItem> getOrderItems() {
         return this.items;
     }
 
+    /**
+     * 무료 배송 조건이 맞는지 확인한다.
+     * */
+    public boolean isFreeShipping() {
+        return getTotalProductPrice() >= FREE_SHIPPING_THRESHOLD;
+    }
+
+    /**
+     * 총 상품 금액을 가져온다.
+     * */
+    public int getTotalProductPrice() {
+        return this.items.stream().mapToInt(OrderItem::getTotalProductPrice).sum();
+    }
+
+    /**
+     * 주문 번호를 생성한다.
+     * */
     static String generateOrderNo() {
         return DateTimeFormatter.ofPattern("YYYYMMddHHmmss").format(LocalDateTime.now());
     }

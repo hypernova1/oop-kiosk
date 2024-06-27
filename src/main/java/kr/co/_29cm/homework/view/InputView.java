@@ -14,19 +14,26 @@ public class InputView {
 
     private InputView() {}
 
+    /**
+     * 상품 번호를 입력받는다.
+     *
+     * @return 상품 번호
+     * */
     public static String inputProductNo() {
         System.out.print("상품번호 : ");
         String input = readLine();
-        if (InputCommand.EXIT.equals(input)) {
-            return "";
-        }
         return input.trim();
     }
 
+    /**
+     * 구매할 상품 수량을 입력받는다.
+     *
+     * @return 구매할 상품 수량
+     * */
     public static int inputQuantity() {
         System.out.print("수량 : ");
         String input = readLine();
-        if (InputCommand.EXIT.equals(input)) {
+        if (InputCommand.COMPLETE_ORDER.equals(input)) {
             return 0;
         }
 
@@ -34,10 +41,18 @@ public class InputView {
             throw new NotNumberException();
         }
 
-        return Integer.parseInt(input);
+        int quantity = Integer.parseInt(input);
+        if (quantity == 0) {
+            //TODO: 올바른 익셉션으로 변경해야 함
+            throw new NotNumberException();
+        }
+        return quantity;
     }
 
-    public static boolean isContinue() {
+    /**
+     * 주문을 계속할지 여부를 입력받는다.
+     * */
+    public static boolean isOrderContinue() {
         String input = readLine().trim();
         if (InputCommand.CONTINUE_ORDER.equals(input)) {
             return true;
@@ -48,6 +63,11 @@ public class InputView {
         throw new BadCommandException();
     }
 
+    /**
+     * 문자열을 입력받는다.
+     *
+     * @return 입력받은 문자열
+     * */
     public static String readLine() {
         try {
             return READER.readLine();

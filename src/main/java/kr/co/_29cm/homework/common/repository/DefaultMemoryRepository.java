@@ -1,7 +1,9 @@
 package kr.co._29cm.homework.common.repository;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -109,5 +111,28 @@ public class DefaultMemoryRepository<T, P> implements Repository<T, P> {
         return null;
     }
 
+    public T clone(T t) {
+        Class<?> clazz = t.getClass();
+        try {
+            Constructor<?> declaredConstructor = clazz.getDeclaredConstructor();
+            Object instance = declaredConstructor.newInstance();
+            Field[] declaredFields = clazz.getDeclaredFields();
+            for (Field field : declaredFields) {
+                field.setAccessible(true);
+                Object value = field.get(t);
+                field.set(instance, value);
+                field.setAccessible(false);
+            }
+            return (T) instance;
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

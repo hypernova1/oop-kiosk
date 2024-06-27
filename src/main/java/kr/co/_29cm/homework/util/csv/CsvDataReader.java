@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 파일 경로를 받아 CSV 데이터를 생성하는 클래스
+ *
+ * @see kr.co._29cm.homework.util.csv.CsvData
+ * */
 public class CsvDataReader {
 
     private final String filePath;

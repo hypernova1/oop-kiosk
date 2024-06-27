@@ -1,12 +1,11 @@
 package kr.co._29cm.homework.order.application;
 
-import kr.co._29cm.homework.cart.domain.CartProduct;
+import kr.co._29cm.homework.cart.domain.Cart;
 import kr.co._29cm.homework.order.domain.NoOrderItemException;
 import kr.co._29cm.homework.order.domain.Order;
 import kr.co._29cm.homework.order.domain.OrderRepository;
-import kr.co._29cm.homework.payment.PaymentService;
+import kr.co._29cm.homework.payment.application.PaymentService;
 import kr.co._29cm.homework.product.application.ProductService;
-import kr.co._29cm.homework.product.payload.ProductPriceInfo;
 import kr.co._29cm.homework.product.payload.ProductQuantityInfo;
 
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.stream.Collectors;
 
 public class OrderService {
 
-    private static final int FREE_SHIPPING = 50_000;
     private final OrderRepository orderRepository;
     private final ProductService productService;
     private final PaymentService paymentService;
@@ -25,20 +23,28 @@ public class OrderService {
         this.paymentService = paymentService;
     }
 
-    public void create(List<CartProduct> cartProducts) {
-        if (cartProducts.isEmpty()) {
+    /**
+     * 주문을 생성한다.
+     *
+     * @param cart 장바구니
+     * @return 주문 번호
+     * */
+    public String create(Cart cart) {
+        if (cart.isEmpty()) {
             throw new NoOrderItemException();
         }
 
-        List<ProductQuantityInfo> productQuantityInfos = cartProducts.stream()
+        List<ProductQuantityInfo> productQuantityInfos = cart.getProducts().stream()
                 .map((cartProduct) -> new ProductQuantityInfo(cartProduct.getProduct().productNo(), cartProduct.getQuantity()))
                 .collect(Collectors.toList());
 
         productService.decreaseQuantity(productQuantityInfos);
-        Order order = Order.from(cartProducts);
+        Order order = Order.from(cart);
 
         this.orderRepository.save(order);
         this.paymentService.create(order);
+
+        return order.getOrderNo();
     }
 
 }

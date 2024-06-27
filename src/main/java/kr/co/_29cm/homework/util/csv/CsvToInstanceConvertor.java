@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * CSV 데이터를 인스턴스로 변환한다.
+ *
+ * @see kr.co._29cm.homework.util.csv.CsvData
  * */
 public class CsvToInstanceConvertor<T> {
 
@@ -16,8 +18,8 @@ public class CsvToInstanceConvertor<T> {
     private final Class<T> clazz;
 
     public CsvToInstanceConvertor(CsvData csvData, Class<T> clazz) {
-        this.fields = csvData.getFields();
-        this.values = csvData.getValues();
+        this.fields = csvData.getFieldNames();
+        this.values = csvData.getRecords();
         this.clazz = clazz;
     }
 
