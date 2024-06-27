@@ -1,9 +1,9 @@
 package kr.co._29cm.homework.util.csv;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -44,7 +44,10 @@ public class CsvToInstanceConvertor<T> {
      * */
     private T convertToInstance(String[] csvColumnValues) {
         try {
-            T instance = clazz.getConstructor().newInstance();
+            Constructor<T> constructor = clazz.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            T instance = constructor.newInstance();
+            constructor.setAccessible(false);
             Field[] fields = clazz.getDeclaredFields();
 
             for (Field field : fields) {

@@ -16,7 +16,7 @@ public class Product {
     @CsvFieldMatcher("재고수량")
     private Integer quantity;
 
-    public Product() {}
+    protected Product() {}
 
     public String getProductNo() {
         return this.productNo;

@@ -1,4 +1,4 @@
-package kr.co._29cm.homework.order;
+package kr.co._29cm.homework.order.domain;
 
 public class OrderProduct {
 

@@ -8,4 +8,6 @@ public interface ProductRepository {
     List<Product> findAll();
 
     Optional<Product> findByProductNo(String productNo);
+
+    List<Product> findByProductNoList(List<String> productNoList);
 }

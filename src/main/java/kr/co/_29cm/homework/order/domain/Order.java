@@ -1,5 +1,6 @@
-package kr.co._29cm.homework.order;
+package kr.co._29cm.homework.order.domain;
 
+import kr.co._29cm.homework.cart.domain.CartProduct;
 import kr.co._29cm.homework.payment.Payment;
 
 import java.util.ArrayList;
@@ -11,4 +12,7 @@ public class Order {
 
     private Payment payment;
 
+    public static void from(List<CartProduct> cartProducts) {
+
+    }
 }
