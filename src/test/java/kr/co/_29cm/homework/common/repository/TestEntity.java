@@ -22,4 +22,8 @@ public class TestEntity {
         this.id = id;
     }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
 }
