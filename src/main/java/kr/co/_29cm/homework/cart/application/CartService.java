@@ -13,11 +13,6 @@ public class CartService {
         this.cartProductRepository = cartProductRepository;
     }
 
-    public void addProduct(String productNo, int quantity) {
-        CartProduct cartProduct = CartProduct.of(productNo, quantity);
-        cartProductRepository.save(cartProduct);
-    }
-
     public List<CartProduct> findAll() {
         return this.cartProductRepository.findAll();
     }

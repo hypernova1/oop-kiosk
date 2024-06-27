@@ -9,7 +9,7 @@ public class OrderItem {
 
     public static OrderItem from(CartProduct cartProduct) {
         OrderItem orderItem = new OrderItem();
-        orderItem.productNo = cartProduct.getProductNo();
+        orderItem.productNo = cartProduct.getProduct().productNo();
         orderItem.quantity = cartProduct.getQuantity();
         return orderItem;
     }

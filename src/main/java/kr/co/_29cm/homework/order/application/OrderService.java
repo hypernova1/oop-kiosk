@@ -30,7 +30,8 @@ public class OrderService {
             throw new NoOrderItemException();
         }
 
-        List<ProductQuantityInfo> productQuantityInfos = cartProducts.stream().map((cartProduct) -> new ProductQuantityInfo(cartProduct.getProductNo(), cartProduct.getQuantity()))
+        List<ProductQuantityInfo> productQuantityInfos = cartProducts.stream()
+                .map((cartProduct) -> new ProductQuantityInfo(cartProduct.getProduct().productNo(), cartProduct.getQuantity()))
                 .collect(Collectors.toList());
 
         productService.decreaseQuantity(productQuantityInfos);
