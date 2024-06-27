@@ -1,9 +1,10 @@
 package kr.co._29cm.homework.order.application;
 
 import kr.co._29cm.homework.cart.domain.CartProduct;
+import kr.co._29cm.homework.order.domain.Order;
 import kr.co._29cm.homework.order.domain.OrderRepository;
 import kr.co._29cm.homework.product.application.ProductService;
-import kr.co._29cm.homework.product.payload.ProductQuantityCheckDto;
+import kr.co._29cm.homework.product.payload.ProductQuantityInfo;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,10 +20,13 @@ public class OrderService {
     }
 
     public void create(List<CartProduct> cartProducts) {
-        List<ProductQuantityCheckDto> productQuantityCheckDtos = cartProducts.stream().map((cartProduct) -> new ProductQuantityCheckDto(cartProduct.getProductNo(), cartProduct.getQuantity()))
+        List<ProductQuantityInfo> productQuantityInfos = cartProducts.stream().map((cartProduct) -> new ProductQuantityInfo(cartProduct.getProductNo(), cartProduct.getQuantity()))
                 .collect(Collectors.toList());
 
-        productService.checkQuantity(productQuantityCheckDtos);
+        productService.decreaseQuantity(productQuantityInfos);
+
+        Order order = Order.from(cartProducts);
+        this.orderRepository.save(order);
     }
 
 }

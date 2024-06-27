@@ -1,7 +1,11 @@
 package kr.co._29cm.homework.cart.domain;
 
+import kr.co._29cm.homework.common.repository.PrimaryKey;
+
 public class CartProduct {
 
+    @PrimaryKey
+    private Integer id;
     private String productNo;
     private int quantity;
 
@@ -10,6 +14,10 @@ public class CartProduct {
         cartProduct.productNo = productNo;
         cartProduct.quantity = quantity;
         return cartProduct;
+    }
+
+    public Integer getId() {
+        return this.id;
     }
 
     public String getProductNo() {

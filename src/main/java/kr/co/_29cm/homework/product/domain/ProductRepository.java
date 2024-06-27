@@ -10,4 +10,8 @@ public interface ProductRepository {
     Optional<Product> findByProductNo(String productNo);
 
     List<Product> findByProductNoList(List<String> productNoList);
+
+    void save(Product product);
+
+    void save(List<Product> products);
 }

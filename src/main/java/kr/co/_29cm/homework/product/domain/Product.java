@@ -1,9 +1,13 @@
 package kr.co._29cm.homework.product.domain;
 
+import kr.co._29cm.homework.common.repository.PrimaryKey;
 import kr.co._29cm.homework.util.csv.CsvFieldMatcher;
+
+import java.util.Objects;
 
 public class Product {
 
+    @PrimaryKey
     @CsvFieldMatcher("상품번호")
     private String productNo;
 
@@ -34,4 +38,22 @@ public class Product {
         return this.quantity;
     }
 
+    public void decreaseQuantity(int quantity) {
+        if (this.quantity < quantity) {
+            throw new SoldOutException();
+        }
+        this.quantity -= quantity;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.productNo);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product product)) return false;
+        return Objects.equals(this.productNo, product.getProductNo());
+    }
 }
