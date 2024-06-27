@@ -1,9 +1,6 @@
 package kr.co._29cm.homework;
 
 
-import kr.co._29cm.homework.cart.application.CartService;
-import kr.co._29cm.homework.cart.domain.CartProduct;
-import kr.co._29cm.homework.cart.infra.MemoryCartProductRepository;
 import kr.co._29cm.homework.order.application.OrderService;
 import kr.co._29cm.homework.order.infra.MemoryOrderRepository;
 import kr.co._29cm.homework.payment.MemoryPaymentRepository;
@@ -16,7 +13,6 @@ public class Application {
     public static void main(String[] args) {
 
         ProductService productService = new ProductService(new MemoryProductRepository());
-        CartService cartService = new CartService(new MemoryCartProductRepository());
         PaymentService paymentService = new PaymentService(new MemoryPaymentRepository(), productService);
         OrderService orderService = new OrderService(new MemoryOrderRepository(), productService, paymentService);
 

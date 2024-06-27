@@ -23,9 +23,11 @@ public class OutputView {
 
     public static void printCartProducts(List<CartProduct> cartProducts) {
         System.out.println("주문 내역:");
+        printBorderLine();
         for (CartProduct cartProduct : cartProducts) {
             System.out.println(cartProduct.getProduct().name() + " - " + cartProduct.getQuantity() + "개");
         }
+        printBorderLine();
     }
 
     public static void thanksToCustomer() {
@@ -38,5 +40,9 @@ public class OutputView {
 
     public static void printException(String message) {
         System.out.println(message);
+    }
+
+    public static void printBorderLine() {
+        System.out.println("----------------------------------------");
     }
 }

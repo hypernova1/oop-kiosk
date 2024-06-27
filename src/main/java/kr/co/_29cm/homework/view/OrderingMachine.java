@@ -1,8 +1,7 @@
 package kr.co._29cm.homework.view;
 
-import kr.co._29cm.homework.cart.application.Cart;
-import kr.co._29cm.homework.cart.domain.CartProduct;
-import kr.co._29cm.homework.order.domain.Order;
+import kr.co._29cm.homework.cart.domain.Cart;
+import kr.co._29cm.homework.order.application.OrderService;
 import kr.co._29cm.homework.product.application.ProductService;
 import kr.co._29cm.homework.product.domain.ProductNotFoundException;
 import kr.co._29cm.homework.product.domain.SoldOutException;
@@ -13,9 +12,11 @@ import java.util.List;
 public class OrderingMachine {
 
     private final ProductService productService;
+    private final OrderService orderService;
 
-    public OrderingMachine(ProductService productService) {
+    public OrderingMachine(ProductService productService, OrderService orderService) {
         this.productService = productService;
+        this.orderService = orderService;
     }
 
     public void run() {
@@ -30,14 +31,16 @@ public class OrderingMachine {
 
                 validateInput(productNo, quantity);
 
-                if (!productNo.isEmpty()) {
+                boolean completeOrder = productNo.isEmpty() && quantity == 0;
+                if (!completeOrder) {
                     ProductDto product = this.productService.findOne(productNo);
-
                     cart.addProduct(product, quantity);
                     continue;
                 }
 
                 OutputView.printCartProducts(cart.getProducts());
+                orderService.create(cart.getProducts());
+                cart.clear();
 
                 exit = InputView.isContinue();
             } catch (BadCommandException e) {
@@ -46,7 +49,6 @@ public class OrderingMachine {
                 OutputView.printException(e.getMessage());
             }
         }
-
 
         OutputView.thanksToCustomer();
     }
