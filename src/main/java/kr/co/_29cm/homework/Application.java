@@ -17,7 +17,7 @@ public class Application {
         OrderService orderService = new OrderService(new MemoryOrderRepository(), productService, paymentService);
 
 
-        OrderingMachine orderingMachine = new OrderingMachine(productService);
+        OrderingMachine orderingMachine = new OrderingMachine(productService, orderService);
         orderingMachine.run();
 
 
