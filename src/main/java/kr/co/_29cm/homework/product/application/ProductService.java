@@ -3,6 +3,8 @@ package kr.co._29cm.homework.product.application;
 import kr.co._29cm.homework.product.domain.Product;
 import kr.co._29cm.homework.product.domain.ProductNotFoundException;
 import kr.co._29cm.homework.product.domain.ProductRepository;
+import kr.co._29cm.homework.product.payload.ProductDto;
+import kr.co._29cm.homework.product.payload.ProductPriceInfo;
 import kr.co._29cm.homework.product.payload.ProductQuantityInfo;
 
 import java.util.List;
@@ -16,14 +18,15 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAll() {
-        return this.productRepository.findAll();
+    public List<ProductDto> getAll() {
+        List<Product> products = this.productRepository.findAll();
+        return products.stream().map(ProductDto::new).collect(Collectors.toList());
     }
 
-    public Product findOne(String productNo) {
+    public ProductDto findOne(String productNo) {
         Product product = this.productRepository.findByProductNo(productNo)
                 .orElseThrow(ProductNotFoundException::new);
-        return product;
+        return new ProductDto(product);
     }
 
     public void decreaseQuantity(List<ProductQuantityInfo> productQuantityInfos) {
@@ -42,6 +45,13 @@ public class ProductService {
         }
 
         productRepository.save(products);
+    }
 
+    public List<ProductPriceInfo> getProductPrices(List<String> productNoList) {
+        List<Product> products = this.productRepository.findByProductNoList(productNoList);
+
+        return products.stream()
+                .map((product) -> new ProductPriceInfo(product.getProductNo(), product.getPrice()))
+                .collect(Collectors.toList());
     }
 }

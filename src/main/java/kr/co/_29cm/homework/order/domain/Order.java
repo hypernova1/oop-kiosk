@@ -3,7 +3,6 @@ package kr.co._29cm.homework.order.domain;
 import kr.co._29cm.homework.cart.domain.CartProduct;
 import kr.co._29cm.homework.common.repository.PrimaryKey;
 import kr.co._29cm.homework.payment.Payment;
-import kr.co._29cm.homework.product.domain.Product;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,7 +15,7 @@ public class Order {
     @PrimaryKey
     private String orderNo;
 
-    private final List<OrderProduct> products = new ArrayList<>();
+    private final List<OrderItem> items = new ArrayList<>();
 
     private Payment payment;
 
@@ -25,15 +24,23 @@ public class Order {
     public static Order from(List<CartProduct> cartProducts) {
         Order order = new Order();
         order.orderNo = generateOrderNo();
-        for (CartProduct cartProduct : cartProducts) {
-            OrderProduct orderProduct = OrderProduct.from(cartProduct);
-            order.products.add(orderProduct);
-        }
+        order.setOrderItems(cartProducts, order);
         return order;
+    }
+
+    private void setOrderItems(List<CartProduct> cartProducts, Order order) {
+        for (CartProduct cartProduct : cartProducts) {
+            OrderItem orderItem = OrderItem.from(cartProduct);
+            order.items.add(orderItem);
+        }
     }
 
     public String getOrderNo() {
         return this.orderNo;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return this.items;
     }
 
     static String generateOrderNo() {

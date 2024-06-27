@@ -5,6 +5,8 @@ import kr.co._29cm.homework.cart.application.CartService;
 import kr.co._29cm.homework.cart.infra.MemoryCartProductRepository;
 import kr.co._29cm.homework.order.application.OrderService;
 import kr.co._29cm.homework.order.infra.MemoryOrderRepository;
+import kr.co._29cm.homework.payment.MemoryPaymentRepository;
+import kr.co._29cm.homework.payment.PaymentService;
 import kr.co._29cm.homework.product.application.ProductService;
 import kr.co._29cm.homework.product.infra.MemoryProductRepository;
 import kr.co._29cm.homework.view.OutputView;
@@ -13,7 +15,8 @@ public class Application {
     public static void main(String[] args) {
         ProductService productService = new ProductService(new MemoryProductRepository());
         CartService cartService = new CartService(new MemoryCartProductRepository());
-        OrderService orderService = new OrderService(new MemoryOrderRepository(), productService);
+        PaymentService paymentService = new PaymentService(new MemoryPaymentRepository(), productService);
+        OrderService orderService = new OrderService(new MemoryOrderRepository(), productService, paymentService);
 
         OutputView.printProducts(productService.getAll());
 

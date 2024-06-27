@@ -20,7 +20,7 @@ public class MemoryProductRepository extends DefaultMemoryRepository<Product, St
 
     @Override
     public Optional<Product> findByProductNo(String productNo) {
-        return items.stream().filter((product) -> product.getProductNo().equals(productNo)).findFirst();
+        return this.findByPrimaryKey(productNo);
     }
 
     @Override
