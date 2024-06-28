@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -47,14 +46,14 @@ class ProductServiceTest {
     @Test
     @DisplayName("멀티 스레드 환경에서 SoldOutException이 정확하게 동작하는지 확인")
     void test_multi_thread_test() throws InterruptedException {
-        int NUMBER_OR_THREADS = 1000;
+        int NUMBER_OR_THREADS = 2000;
 
         CsvData csvData = new CsvDataReader("product.csv").readCsv();
         List<Product> dummyProducts = new CsvToInstanceConvertor<>(csvData, Product.class).convertToInstances();
         Product dummyProduct = dummyProducts.get(0);
+        int stock = dummyProduct.getStock();
 
         List<ProductQuantityInfo> quantityInfos = new ArrayList<>();
-        int stock = dummyProduct.getStock();
         ProductQuantityInfo quantityInfo = new ProductQuantityInfo(dummyProduct.getProductNo(), 1);
         quantityInfos.add(quantityInfo);
 
