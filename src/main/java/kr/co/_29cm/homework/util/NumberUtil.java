@@ -1,6 +1,10 @@
 package kr.co._29cm.homework.util;
 
+import java.text.DecimalFormat;
+
 public class NumberUtil {
+
+    private static final DecimalFormat decimalFormat = new DecimalFormat("###,###원");
 
     private NumberUtil() {}
 
@@ -9,6 +13,10 @@ public class NumberUtil {
      * */
     public static boolean isInteger(String str) {
         return str != null && str.matches("^-?\\d+$");
+    }
+
+    public static String toMoneyFormat(int amount) {
+        return decimalFormat.format(amount);
     }
 
 }

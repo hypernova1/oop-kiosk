@@ -3,6 +3,7 @@ package kr.co._29cm.homework.view.output;
 import kr.co._29cm.homework.order.payload.OrderResponseItem;
 import kr.co._29cm.homework.order.payload.OrderResponse;
 import kr.co._29cm.homework.product.payload.ProductDto;
+import kr.co._29cm.homework.util.NumberUtil;
 
 import java.util.List;
 
@@ -41,12 +42,12 @@ public class OutputView {
      * */
     public static void printOrderDetail(OrderResponse orderResponse) {
         printOrderedProducts(orderResponse.products());
-        System.out.println("주문금액: " + orderResponse.productPrice());
+        System.out.println("주문금액: " + NumberUtil.toMoneyFormat(orderResponse.productPrice()));
         if (orderResponse.shippingPrice() > 0) {
-            System.out.println("배송비: " + orderResponse.shippingPrice());
+            System.out.println("배송비: " + NumberUtil.toMoneyFormat(orderResponse.shippingPrice()));
         }
         printBorderLine();
-        System.out.println("지불금액: " + orderResponse.totalPaidPrice());
+        System.out.println("지불금액: " + NumberUtil.toMoneyFormat(orderResponse.totalPaidPrice()));
         printBorderLine();
     }
 
