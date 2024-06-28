@@ -17,6 +17,7 @@ public class Application {
         PaymentService paymentService = new PaymentService(new MemoryPaymentRepository());
         OrderService orderService = new OrderService(new MemoryOrderRepository(), productService, paymentService);
         OrderProcessHandler orderProcessHandler = new OrderProcessHandler(productService, orderService, paymentService);
+
         OrderingMachine orderingMachine = new OrderingMachine(orderProcessHandler);
         orderingMachine.process();
     }

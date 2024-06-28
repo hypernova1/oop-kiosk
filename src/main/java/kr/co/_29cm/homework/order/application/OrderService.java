@@ -6,8 +6,8 @@ import kr.co._29cm.homework.order.domain.OrderRepository;
 import kr.co._29cm.homework.order.payload.OrderRequest;
 import kr.co._29cm.homework.payment.application.PaymentService;
 import kr.co._29cm.homework.product.application.ProductService;
-import kr.co._29cm.homework.product.payload.ProductPriceInfo;
-import kr.co._29cm.homework.product.payload.ProductQuantityInfo;
+import kr.co._29cm.homework.product.payload.ProductPriceDto;
+import kr.co._29cm.homework.product.payload.ProductQuantityDto;
 
 import java.util.List;
 
@@ -34,13 +34,13 @@ public class OrderService {
             throw new NoOrderItemException();
         }
 
-        List<ProductQuantityInfo> quantityInfos = orderRequest.products().stream()
-                .map((product) -> new ProductQuantityInfo(product.productNo(), product.quantity()))
+        List<ProductQuantityDto> productQuantityDtoList = orderRequest.products().stream()
+                .map((product) -> new ProductQuantityDto(product.productNo(), product.quantity()))
                 .toList();
-        productService.decreaseStock(quantityInfos);
+        productService.decreaseStock(productQuantityDtoList);
 
-        List<String> productNoList = quantityInfos.stream().map(ProductQuantityInfo::productNo).toList();
-        List<ProductPriceInfo> productPrices = productService.getProductPrices(productNoList);
+        List<String> productNoList = productQuantityDtoList.stream().map(ProductQuantityDto::productNo).toList();
+        List<ProductPriceDto> productPrices = productService.getProductPrices(productNoList);
 
         Order order = Order.of(orderRequest, productPrices);
 

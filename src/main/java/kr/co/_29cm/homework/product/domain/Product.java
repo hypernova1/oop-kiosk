@@ -15,14 +15,14 @@ public class Product {
     private String name;
 
     @CsvFieldMatcher("판매가격")
-    private Integer price;
+    private int price;
 
     @CsvFieldMatcher("재고수량")
-    private Integer stock;
+    private int stock;
 
     protected Product() {}
 
-    protected Product(String productNo, String name, Integer price, Integer stock) {
+    protected Product(String productNo, String name, int price, int stock) {
         this.productNo = productNo;
         this.name = name;
         this.price = price;
@@ -52,7 +52,7 @@ public class Product {
      *
      * @return 상품 가격
      * */
-    public Integer getPrice() {
+    public int getPrice() {
         return this.price;
     }
 
@@ -61,7 +61,7 @@ public class Product {
      *
      * @return 상품 재고
      * */
-    public Integer getStock() {
+    public int getStock() {
         return this.stock;
     }
 

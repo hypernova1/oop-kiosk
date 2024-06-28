@@ -2,7 +2,7 @@ package kr.co._29cm.homework.cart.domain;
 
 import kr.co._29cm.homework.product.payload.ProductDto;
 
-public class CartProduct {
+public class CartItem {
 
     private ProductDto product;
     private int quantity;
@@ -13,11 +13,11 @@ public class CartProduct {
      * @param product 상품 정보
      * @param quantity 수량
      * */
-    public static CartProduct of(ProductDto product, int quantity) {
-        CartProduct cartProduct = new CartProduct();
-        cartProduct.product = product;
-        cartProduct.quantity = quantity;
-        return cartProduct;
+    public static CartItem of(ProductDto product, int quantity) {
+        CartItem cartItem = new CartItem();
+        cartItem.product = product;
+        cartItem.quantity = quantity;
+        return cartItem;
     }
 
     /**

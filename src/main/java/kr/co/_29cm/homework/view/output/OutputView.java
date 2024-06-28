@@ -37,7 +37,7 @@ public class OutputView {
     }
 
     /**
-     * 결제 정보를 출력한다.
+     * 주문 정보를 출력한다.
      * */
     public static void printOrder(OrderResponse orderResponse) {
         printOrderedProducts(orderResponse.products());

@@ -7,11 +7,10 @@ import kr.co._29cm.homework.product.domain.Product;
 import kr.co._29cm.homework.product.domain.ProductNotFoundException;
 import kr.co._29cm.homework.product.domain.ProductRepository;
 import kr.co._29cm.homework.product.payload.ProductDto;
-import kr.co._29cm.homework.product.payload.ProductPriceInfo;
-import kr.co._29cm.homework.product.payload.ProductQuantityInfo;
+import kr.co._29cm.homework.product.payload.ProductPriceDto;
+import kr.co._29cm.homework.product.payload.ProductQuantityDto;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProductService {
 
@@ -47,11 +46,11 @@ public class ProductService {
     /**
      * 상품의 수량을 뺀다.
      *
-     * @param productQuantityInfos 상품 수량 정보
+     * @param productQuantities 상품 수량 정보
      * */
-    public void decreaseStock(List<ProductQuantityInfo> productQuantityInfos) {
-        List<String> productNoList = productQuantityInfos.stream()
-                .map(ProductQuantityInfo::productNo)
+    public void decreaseStock(List<ProductQuantityDto> productQuantities) {
+        List<String> productNoList = productQuantities.stream()
+                .map(ProductQuantityDto::productNo)
                 .toList();
 
         List<String> lockKeys = LockKeyGenerator.generateLockKeyList(LockType.PRODUCT, productNoList);
@@ -60,7 +59,7 @@ public class ProductService {
 
             List<Product> products = this.productRepository.findByProductNoList(productNoList);
 
-            for (ProductQuantityInfo quantityInfo : productQuantityInfos) {
+            for (ProductQuantityDto quantityInfo : productQuantities) {
                 Product product = products.stream()
                         .filter((p) -> p.getProductNo().equals(quantityInfo.productNo()))
                         .findFirst()
@@ -81,11 +80,11 @@ public class ProductService {
      * @param productNoList 상품 번호 목록
      * @return 상품 가격 정보 목록
      * */
-    public List<ProductPriceInfo> getProductPrices(List<String> productNoList) {
+    public List<ProductPriceDto> getProductPrices(List<String> productNoList) {
         List<Product> products = this.productRepository.findByProductNoList(productNoList);
 
         return products.stream()
-                .map((product) -> new ProductPriceInfo(product.getProductNo(), product.getPrice()))
+                .map((product) -> new ProductPriceDto(product.getProductNo(), product.getPrice()))
                 .toList();
     }
 

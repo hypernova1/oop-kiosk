@@ -1,13 +1,6 @@
 package kr.co._29cm.homework.view.input;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-
 public class InputView {
-
-    private static final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
     private InputView() {}
 
@@ -18,7 +11,7 @@ public class InputView {
      * */
     public static Command inputProductNoOrCompleteOrder() {
         System.out.print("상품번호 : ");
-        return new Command(readLine());
+        return Command.call();
     }
 
     /**
@@ -28,28 +21,15 @@ public class InputView {
      * */
     public static Command inputQuantity() {
         System.out.print("수량 : ");
-        return new Command(readLine());
+        return Command.call();
     }
 
     /**
-     * 주문을 계속할지 여부를 입력받는다.
+     * 프로그램을 종료할지 여부를 입력받는다.
      * */
-    public static Command isOrderContinue() {
+    public static Command inputTerminatedOrOrderContinue() {
         System.out.println("계속 주문 하시겠습니까? o[order]: 주문, q[quit]: 종료");
-        return new Command(readLine().trim());
-    }
-
-    /**
-     * 문자열을 입력받는다.
-     *
-     * @return 입력받은 문자열
-     * */
-    public static String readLine() {
-        try {
-            return READER.readLine();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return Command.call();
     }
 
 }

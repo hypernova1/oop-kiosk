@@ -3,7 +3,7 @@ package kr.co._29cm.homework.payment.domain;
 import kr.co._29cm.homework.common.repository.PrimaryKey;
 import kr.co._29cm.homework.order.domain.Order;
 import kr.co._29cm.homework.order.domain.OrderItem;
-import kr.co._29cm.homework.product.payload.ProductPriceInfo;
+import kr.co._29cm.homework.product.payload.ProductPriceDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,15 +34,15 @@ public class Payment {
         return payment;
     }
 
-    private int calculateProductPrice(List<OrderItem> orderItems, List<ProductPriceInfo> productPriceInfos) {
+    private int calculateProductPrice(List<OrderItem> orderItems, List<ProductPriceDto> productPriceDtos) {
         int totalProductPrice = 0;
         for (OrderItem orderItem : orderItems) {
-            ProductPriceInfo productPriceInfo = productPriceInfos.stream()
+            ProductPriceDto productPriceDto = productPriceDtos.stream()
                     .filter((priceInfo -> orderItem.getProductNo().equals(priceInfo.productNo())))
                     .findFirst()
                     .orElseThrow(RuntimeException::new);
 
-            totalProductPrice += productPriceInfo.price() * orderItem.getQuantity();
+            totalProductPrice += productPriceDto.price() * orderItem.getQuantity();
         }
         return totalProductPrice;
     }

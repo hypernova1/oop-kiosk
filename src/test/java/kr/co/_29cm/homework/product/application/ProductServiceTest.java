@@ -5,7 +5,7 @@ import kr.co._29cm.homework.common.lock.MemoryLockManager;
 import kr.co._29cm.homework.product.domain.Product;
 import kr.co._29cm.homework.product.domain.ProductRepository;
 import kr.co._29cm.homework.product.domain.SoldOutException;
-import kr.co._29cm.homework.product.payload.ProductQuantityInfo;
+import kr.co._29cm.homework.product.payload.ProductQuantityDto;
 import kr.co._29cm.homework.util.csv.CsvData;
 import kr.co._29cm.homework.util.csv.CsvDataReader;
 import kr.co._29cm.homework.util.csv.CsvToInstanceConvertor;
@@ -13,8 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -24,7 +22,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -56,11 +53,11 @@ class ProductServiceTest {
         Product dummyProduct = dummyProducts.get(0);
         int stock = dummyProduct.getStock();
 
-        List<ProductQuantityInfo> quantityInfos = new ArrayList<>();
-        ProductQuantityInfo quantityInfo = new ProductQuantityInfo(dummyProduct.getProductNo(), 1);
+        List<ProductQuantityDto> quantityInfos = new ArrayList<>();
+        ProductQuantityDto quantityInfo = new ProductQuantityDto(dummyProduct.getProductNo(), 1);
         quantityInfos.add(quantityInfo);
 
-        List<String> productNoList = quantityInfos.stream().map(ProductQuantityInfo::productNo).toList();
+        List<String> productNoList = quantityInfos.stream().map(ProductQuantityDto::productNo).toList();
 
         when(productRepository.findByProductNoList(productNoList)).thenReturn(dummyProducts);
 

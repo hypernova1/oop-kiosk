@@ -8,10 +8,15 @@ import java.util.Optional;
 
 public class Cart {
 
-    private final List<CartProduct> cartProducts = new ArrayList<>();
+    private final List<CartItem> items = new ArrayList<>();
 
-    public List<CartProduct> getProducts() {
-        return cartProducts;
+    /**
+     * 장바구니에 담긴 상품 목록을 가져온다.
+     *
+     * @return 장바구니에 담긴 상품 목록
+     * */
+    public List<CartItem> getItems() {
+        return items;
     }
 
     /**
@@ -21,12 +26,12 @@ public class Cart {
      * @param quantity 주문 수량
      * */
     public void addProduct(ProductDto productDto, int quantity) {
-        Optional<CartProduct> optionalCartProduct = findCartProductByProductDto(productDto);
+        Optional<CartItem> optionalCartProduct = findCartProductByProductDto(productDto);
         if (optionalCartProduct.isPresent()) {
             optionalCartProduct.get().addQuantity(quantity);
             return;
         }
-        this.cartProducts.add(CartProduct.of(productDto, quantity));
+        this.items.add(CartItem.of(productDto, quantity));
     }
 
     /**
@@ -35,9 +40,9 @@ public class Cart {
      * @param productDto 상품 정보
      * @return 동일한 상품
      * */
-    private Optional<CartProduct> findCartProductByProductDto(ProductDto productDto) {
-        return this.cartProducts.stream()
-                .filter(cartProduct -> cartProduct.getProduct().equals(productDto))
+    private Optional<CartItem> findCartProductByProductDto(ProductDto productDto) {
+        return this.items.stream()
+                .filter(cartItem -> cartItem.getProduct().equals(productDto))
                 .findFirst();
     }
 
@@ -45,7 +50,7 @@ public class Cart {
      * 장바구니를 비운다.
      * */
     public void clear() {
-        this.cartProducts.clear();
+        this.items.clear();
     }
 
     /**
@@ -54,6 +59,6 @@ public class Cart {
      * @return 장바구니 비어있음 여부
      * */
     public boolean isEmpty() {
-        return this.cartProducts.isEmpty();
+        return this.items.isEmpty();
     }
 }

@@ -4,7 +4,7 @@ import kr.co._29cm.homework.common.repository.PrimaryKey;
 import kr.co._29cm.homework.order.payload.OrderRequest;
 import kr.co._29cm.homework.order.payload.OrderRequestItem;
 import kr.co._29cm.homework.product.domain.ProductNotFoundException;
-import kr.co._29cm.homework.product.payload.ProductPriceInfo;
+import kr.co._29cm.homework.product.payload.ProductPriceDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,10 +24,10 @@ public class Order {
 
     protected Order() {}
 
-    public static Order of(OrderRequest orderRequest, List<ProductPriceInfo> productPriceInfos) {
+    public static Order of(OrderRequest orderRequest, List<ProductPriceDto> productPriceDtos) {
         Order order = new Order();
         order.orderNo = generateOrderNo();
-        order.setOrderItems(orderRequest.products(), productPriceInfos);
+        order.setOrderItems(orderRequest.products(), productPriceDtos);
         return order;
     }
 
@@ -36,13 +36,13 @@ public class Order {
      *
      * @param orderRequestItems 장바구니 상품 목록
      * */
-    private void setOrderItems(List<OrderRequestItem> orderRequestItems, List<ProductPriceInfo> productPriceInfos) {
+    private void setOrderItems(List<OrderRequestItem> orderRequestItems, List<ProductPriceDto> productPriceDtos) {
         for (OrderRequestItem orderRequestItem : orderRequestItems) {
-            ProductPriceInfo productPriceInfo = productPriceInfos.stream()
+            ProductPriceDto productPriceDto = productPriceDtos.stream()
                     .filter((pi) -> pi.productNo().equals(orderRequestItem.productNo()))
                     .findFirst()
                     .orElseThrow(() -> new ProductNotFoundException(orderRequestItem.productNo()));
-            OrderItem orderItem = OrderItem.of(orderRequestItem, productPriceInfo.price());
+            OrderItem orderItem = OrderItem.of(orderRequestItem, productPriceDto.price());
             this.items.add(orderItem);
         }
     }

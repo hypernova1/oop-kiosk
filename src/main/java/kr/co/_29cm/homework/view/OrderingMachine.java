@@ -1,6 +1,5 @@
 package kr.co._29cm.homework.view;
 
-import kr.co._29cm.homework.cart.domain.Cart;
 import kr.co._29cm.homework.cart.domain.CartEmptyException;
 import kr.co._29cm.homework.order.domain.NoOrderItemException;
 import kr.co._29cm.homework.order.payload.OrderResponse;
@@ -26,29 +25,30 @@ public class OrderingMachine {
      * 주문 프로세스를 시작한다.
      */
     public void process() {
-        Cart cart = new Cart();
-
         List<ProductDto> products = orderProcessHandler.getAllProducts();
         OutputView.printProducts(products);
-        boolean process = true;
 
-        while (process) {
+        while (true) {
             try {
                 Command productNoInput = InputView.inputProductNoOrCompleteOrder();
-                if (productNoInput.isCompleteOrder()) {
-                    OrderResponse orderResponse = orderProcessHandler.createOrder(cart);
-                    OutputView.printOrder(orderResponse);
-                    process = InputView.isOrderContinue().isOrderContinue();
+                if (!productNoInput.isCompleteOrder()) {
+                    Command quantityInput = InputView.inputQuantity();
+                    orderProcessHandler.addProductToCart(productNoInput.toString(), quantityInput.toInt());
                     continue;
                 }
 
-                Command quantityInput = InputView.inputQuantity();
-                orderProcessHandler.addCartProduct(productNoInput.toString(), quantityInput.toInt(), cart);
+                OrderResponse orderResponse = orderProcessHandler.createOrder();
+                OutputView.printOrder(orderResponse);
+
+                boolean isTerminated = InputView.inputTerminatedOrOrderContinue().isProgramTerminated();
+                if (isTerminated) {
+                    break;
+                }
             } catch (BadCommandException | ProductNotFoundException | CartEmptyException | NoOrderItemException e) {
                 OutputView.printException(e);
             } catch (SoldOutException e) {
                 OutputView.printException(e);
-                cart.clear();
+                orderProcessHandler.clearCart();
             }
         }
 

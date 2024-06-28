@@ -4,7 +4,7 @@ import kr.co._29cm.homework.order.domain.Order;
 import kr.co._29cm.homework.payment.domain.Payment;
 import kr.co._29cm.homework.payment.domain.PaymentNotFoundException;
 import kr.co._29cm.homework.payment.domain.PaymentRepository;
-import kr.co._29cm.homework.payment.payload.PaymentDto;
+import kr.co._29cm.homework.payment.payload.PaymentResponse;
 
 public class PaymentService {
 
@@ -30,9 +30,9 @@ public class PaymentService {
      * @param 주문 번호
      * @return 결제 정보
      * */
-    public PaymentDto findOne(String orderNo) {
+    public PaymentResponse findOne(String orderNo) {
         Payment payment = this.paymentRepository.findByOrderNo(orderNo)
                 .orElseThrow(() -> new PaymentNotFoundException(orderNo));
-        return new PaymentDto(payment);
+        return new PaymentResponse(payment);
     }
 }

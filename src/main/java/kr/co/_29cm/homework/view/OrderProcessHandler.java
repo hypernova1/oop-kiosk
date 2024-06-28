@@ -6,7 +6,7 @@ import kr.co._29cm.homework.order.payload.OrderRequest;
 import kr.co._29cm.homework.order.payload.OrderResponse;
 import kr.co._29cm.homework.order.payload.OrderRequestItem;
 import kr.co._29cm.homework.payment.application.PaymentService;
-import kr.co._29cm.homework.payment.payload.PaymentDto;
+import kr.co._29cm.homework.payment.payload.PaymentResponse;
 import kr.co._29cm.homework.product.application.ProductService;
 import kr.co._29cm.homework.product.payload.ProductDto;
 import kr.co._29cm.homework.view.input.BadCommandException;
@@ -23,11 +23,13 @@ public class OrderProcessHandler {
     private final ProductService productService;
     private final OrderService orderService;
     private final PaymentService paymentService;
+    private final Cart cart;
 
     public OrderProcessHandler(ProductService productService, OrderService orderService, PaymentService paymentService) {
         this.productService = productService;
         this.orderService = orderService;
         this.paymentService = paymentService;
+        this.cart = new Cart();
     }
 
     /**
@@ -37,7 +39,7 @@ public class OrderProcessHandler {
      * @param quantity 구매할 수량
      * @param cart 장바구니
      */
-    public void addCartProduct(String productNo, int quantity, Cart cart) {
+    public void addProductToCart(String productNo, int quantity) {
         validateOrderData(productNo, quantity);
         ProductDto product = productService.findOne(productNo);
         cart.addProduct(product, quantity);
@@ -48,14 +50,14 @@ public class OrderProcessHandler {
      *
      * @param cart 장바구니
      */
-    public OrderResponse createOrder(Cart cart) {
-        List<OrderRequestItem> productQuantityInfos = cart.getProducts().stream()
+    public OrderResponse createOrder() {
+        List<OrderRequestItem> productQuantityInfos = cart.getItems().stream()
                 .map(cartProduct -> new OrderRequestItem(cartProduct.getProduct().productNo(), cartProduct.getQuantity()))
                 .toList();
 
         OrderRequest orderRequest = new OrderRequest(productQuantityInfos);
         String orderNo = orderService.create(orderRequest);
-        PaymentDto paymentDto = paymentService.findOne(orderNo);
+        PaymentResponse paymentResponse = paymentService.findOne(orderNo);
         cart.clear();
 
         List<String> productNoList = productQuantityInfos.stream()
@@ -63,7 +65,7 @@ public class OrderProcessHandler {
                 .toList();
         List<ProductDto> productDtoList = productService.findList(productNoList);
 
-        return new OrderResponse(paymentDto, productQuantityInfos, productDtoList);
+        return new OrderResponse(paymentResponse, productQuantityInfos, productDtoList);
     }
 
     /**
@@ -85,4 +87,7 @@ public class OrderProcessHandler {
         return productService.getAll();
     }
 
+    public void clearCart() {
+        this.cart.clear();
+    }
 }
