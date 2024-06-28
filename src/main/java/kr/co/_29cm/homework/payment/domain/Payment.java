@@ -1,13 +1,17 @@
 package kr.co._29cm.homework.payment.domain;
 
+import kr.co._29cm.homework.common.repository.PrimaryKey;
 import kr.co._29cm.homework.order.domain.Order;
 import kr.co._29cm.homework.order.domain.OrderItem;
 import kr.co._29cm.homework.product.payload.ProductPriceInfo;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Payment {
 
+    @PrimaryKey
+    private String id;
     private int productPrice;
     private int shippingPrice;
     private int totalPaidPrice;
@@ -21,6 +25,7 @@ public class Payment {
      * */
     public static Payment from(Order order) {
         Payment payment = new Payment();
+        payment.id = UUID.randomUUID().toString();
         payment.orderNo = order.getOrderNo();
         payment.productPrice = order.getTotalProductPrice();
         payment.shippingPrice = order.isFreeShipping() ? 0 : 2500;

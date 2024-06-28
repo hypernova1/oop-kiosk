@@ -1,23 +1,40 @@
 package kr.co._29cm.homework.common.lock;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeoutException;
 
 public class MemoryLockManager implements LockManager {
 
     private static final long DEFAULT_ADDITIONAL_MILLISECONDS = 1000 * 60L;
-    private final List<Lock> locks = Collections.synchronizedList(new ArrayList<>());
+    private final Map<String, Lock> locks = new ConcurrentHashMap<>();
 
     @Override
-    public synchronized void acquire(String id) {
-        while (exists(id)) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+    public void acquire(String id) {
+        long startTime = System.currentTimeMillis();
+        long timeout = 1000 * 30;
+        long elapsedTime = 0;
+
+        synchronized (locks) {
+            while (exists(id)) {
+                try {
+                    long waitTime = timeout - elapsedTime;
+                    if (waitTime <= 0) {
+                        throw new TimeoutException("락 획득 실패. id: " + id);
+                    }
+                    locks.wait(waitTime);
+                    elapsedTime = System.currentTimeMillis() - startTime;
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(e);
+                } catch (TimeoutException e) {
+                    throw new RuntimeException(e);
+                }
             }
+            set(id);
         }
-        set(id);
-        notifyAll();
 
     }
 
@@ -31,48 +48,40 @@ public class MemoryLockManager implements LockManager {
         this.set(id, DEFAULT_ADDITIONAL_MILLISECONDS);
     }
 
-    public void set(String id, long additionalMilliSeconds) {
-        synchronized (locks) {
-            if (exists(id)) {
-                throw new AlreadyLockException();
-            }
-            Lock lock = new Lock(id, additionalMilliSeconds);
-            locks.add(lock);
+    public synchronized void set(String id, long additionalMilliSeconds) {
+        if (exists(id)) {
+            throw new AlreadyLockException();
         }
+        Lock lock = new Lock(id, additionalMilliSeconds);
+        locks.put(id, lock);
     }
 
     @Override
     public void release(String id) {
         synchronized (locks) {
-            Iterator<Lock> iterator = locks.iterator();
-            while (iterator.hasNext()) {
-                Lock nextLock = iterator.next();
-                if (nextLock.getId().equals(id)) {
-                    iterator.remove();
-                    break;
-                }
-            }
+            locks.remove(id);
+            locks.notifyAll();
         }
     }
 
     @Override
     public void releaseList(List<String> ids) {
-        ids.forEach(this::release);
+        for (String id : ids) {
+            this.release(id);
+        }
     }
 
     @Override
-    public boolean exists(String id) {
-        synchronized (locks) {
-            Optional<Lock> lock = this.findLock(id);
-            if (lock.isEmpty()) {
-                return false;
-            }
-            if (lock.get().isExpired()) {
-                release(id);
-                return false;
-            }
-            return true;
+    public synchronized boolean exists(String id) {
+        Optional<Lock> lock = this.findLock(id);
+        if (lock.isEmpty()) {
+            return false;
         }
+        if (lock.get().isExpired()) {
+            release(id);
+            return false;
+        }
+        return true;
     }
 
     public Lock get(String id) {
@@ -80,9 +89,8 @@ public class MemoryLockManager implements LockManager {
     }
 
     private Optional<Lock> findLock(String id) {
-        synchronized (locks) {
-            return this.locks.stream().filter((l) -> l.getId().equals(id)).findFirst();
-        }
+        Lock value = this.locks.get(id);
+        return Optional.ofNullable(value);
     }
 
 }

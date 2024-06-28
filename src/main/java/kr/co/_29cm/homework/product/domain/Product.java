@@ -18,15 +18,15 @@ public class Product {
     private Integer price;
 
     @CsvFieldMatcher("재고수량")
-    private Integer quantity;
+    private Integer stock;
 
     protected Product() {}
 
-    protected Product(String productNo, String name, Integer price, Integer quantity) {
+    protected Product(String productNo, String name, Integer price, Integer stock) {
         this.productNo = productNo;
         this.name = name;
         this.price = price;
-        this.quantity = quantity;
+        this.stock = stock;
     }
 
     /**
@@ -61,8 +61,8 @@ public class Product {
      *
      * @return 상품 재고
      * */
-    public Integer getQuantity() {
-        return this.quantity;
+    public Integer getStock() {
+        return this.stock;
     }
 
     /**
@@ -70,11 +70,11 @@ public class Product {
      *
      * @param quantity 낮출 수량
      * */
-    public void decreaseQuantity(int quantity) {
-        if (this.quantity < quantity) {
-            throw new SoldOutException();
+    public void decreaseStock(int quantity) {
+        if (this.stock < quantity) {
+            throw new SoldOutException(productNo, this.stock, quantity);
         }
-        this.quantity -= quantity;
+        this.stock -= quantity;
     }
 
     @Override

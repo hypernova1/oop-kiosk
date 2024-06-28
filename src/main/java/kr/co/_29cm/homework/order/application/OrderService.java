@@ -38,7 +38,7 @@ public class OrderService {
                 .map((cartProduct) -> new ProductQuantityInfo(cartProduct.getProduct().productNo(), cartProduct.getQuantity()))
                 .collect(Collectors.toList());
 
-        productService.decreaseQuantity(productQuantityInfos);
+        productService.decreaseStock(productQuantityInfos);
         Order order = Order.from(cart);
 
         this.orderRepository.save(order);

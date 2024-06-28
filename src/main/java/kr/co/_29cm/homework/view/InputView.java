@@ -19,10 +19,9 @@ public class InputView {
      *
      * @return 상품 번호
      * */
-    public static String inputProductNo() {
+    public static String inputProductNoOrCompleteOrder() {
         System.out.print("상품번호 : ");
-        String input = readLine();
-        return input.trim();
+        return readLine();
     }
 
     /**
@@ -34,7 +33,7 @@ public class InputView {
         System.out.print("수량 : ");
         String input = readLine();
         if (InputCommand.COMPLETE_ORDER.equals(input)) {
-            return 0;
+            return -1;
         }
 
         if (!NumberUtil.isInteger(input)) {
@@ -53,6 +52,7 @@ public class InputView {
      * 주문을 계속할지 여부를 입력받는다.
      * */
     public static boolean isOrderContinue() {
+        System.out.println("계속 주문 하시겠습니까? o[order]: 주문, q[quit]: 종료");
         String input = readLine().trim();
         if (InputCommand.CONTINUE_ORDER.equals(input)) {
             return true;

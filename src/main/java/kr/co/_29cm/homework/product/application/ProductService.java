@@ -49,7 +49,7 @@ public class ProductService {
      *
      * @param productQuantityInfos 상품 수량 정보
      * */
-    public void decreaseQuantity(List<ProductQuantityInfo> productQuantityInfos) {
+    public void decreaseStock(List<ProductQuantityInfo> productQuantityInfos) {
         List<String> productNoList = productQuantityInfos.stream()
                 .map(ProductQuantityInfo::productNo)
                 .collect(Collectors.toList());
@@ -61,13 +61,12 @@ public class ProductService {
             List<Product> products = this.productRepository.findByProductNoList(productNoList);
 
             for (ProductQuantityInfo quantityInfo : productQuantityInfos) {
-                //TODO: 실제로 메모리에서 수량을 빼는 거라 롤백 전략 필요함
                 Product product = products.stream()
                         .filter((p) -> p.getProductNo().equals(quantityInfo.productNo()))
                         .findFirst()
                         .orElseThrow(() -> new ProductNotFoundException(quantityInfo.productNo()));
 
-                product.decreaseQuantity(quantityInfo.quantity());
+                product.decreaseStock(quantityInfo.quantity());
             }
 
             productRepository.save(products);

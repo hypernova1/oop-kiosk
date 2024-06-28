@@ -2,7 +2,6 @@ package kr.co._29cm.homework.view;
 
 import kr.co._29cm.homework.cart.domain.Cart;
 import kr.co._29cm.homework.order.application.OrderService;
-import kr.co._29cm.homework.payment.domain.Payment;
 import kr.co._29cm.homework.payment.application.PaymentService;
 import kr.co._29cm.homework.payment.payload.PaymentDto;
 import kr.co._29cm.homework.product.application.ProductService;
@@ -28,25 +27,21 @@ public class OrderingMachine {
      * 주문 프로세스를 시작한다.
      */
     public void process() {
-        List<ProductDto> products = productService.getAll();
-        OutputView.printProducts(products);
-
         Cart cart = new Cart();
 
+        List<ProductDto> products = productService.getAll();
+        OutputView.printProducts(products);
         boolean process = true;
         while (process) {
             try {
-                String productNo = InputView.inputProductNo();
-
+                String productNo = InputView.inputProductNoOrCompleteOrder();
                 if (InputCommand.COMPLETE_ORDER.equals(productNo)) {
                     createOrder(cart);
+                    process = InputView.isOrderContinue();
+                } else {
+                    int quantity = InputView.inputQuantity();
+                    addCartProduct(productNo, quantity, cart);
                 }
-
-                int quantity = InputView.inputQuantity();
-
-                addCartProduct(productNo, quantity, cart);
-
-                process = InputView.isOrderContinue();
             } catch (BadCommandException e) {
                 OutputView.printBadInput();
             } catch (ProductNotFoundException | SoldOutException e) {
@@ -87,7 +82,7 @@ public class OrderingMachine {
      * @param quantity  주문 수량
      */
     public void validateOrderData(String productNo, int quantity) {
-        boolean isValid = (productNo.isEmpty() && quantity == 0) || (!productNo.isEmpty() && quantity > 0);
+        boolean isValid = (productNo.isEmpty() && quantity == -1) || (!productNo.isEmpty() && quantity > 0);
         if (!isValid) {
             throw new BadCommandException();
         }
