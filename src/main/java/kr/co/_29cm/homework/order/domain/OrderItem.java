@@ -1,6 +1,6 @@
 package kr.co._29cm.homework.order.domain;
 
-import kr.co._29cm.homework.cart.domain.CartProduct;
+import kr.co._29cm.homework.order.payload.OrderRequestItem;
 
 public class OrderItem {
 
@@ -11,14 +11,14 @@ public class OrderItem {
     /**
      * 장바구니 상품 정보로 주문 아이템을 생성한다.
      *
-     * @param cartProduct 장바구니 상품 정보
+     * @param orderRequestItem 장바구니 상품 정보
      * @return 주문 아이템
      * */
-    public static OrderItem from(CartProduct cartProduct) {
+    public static OrderItem of(OrderRequestItem orderRequestItem, int price) {
         OrderItem orderItem = new OrderItem();
-        orderItem.productNo = cartProduct.getProduct().productNo();
-        orderItem.quantity = cartProduct.getQuantity();
-        orderItem.productPrice = cartProduct.getProduct().price();
+        orderItem.productNo = orderRequestItem.productNo();
+        orderItem.quantity = orderRequestItem.quantity();
+        orderItem.productPrice = price;
         return orderItem;
     }
 

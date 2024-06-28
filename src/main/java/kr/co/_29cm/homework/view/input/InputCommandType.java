@@ -1,6 +1,6 @@
-package kr.co._29cm.homework.view;
+package kr.co._29cm.homework.view.input;
 
-public enum InputCommand {
+public enum InputCommandType {
     COMPLETE_ORDER(" ", " "),
     CONTINUE_ORDER("o", "order"),
     QUIT("q", "quit");
@@ -8,15 +8,15 @@ public enum InputCommand {
     private final String fullCommand;
     private final String shortCommand;
 
-    InputCommand(String fullCommand, String shortCommand) {
+    InputCommandType(String fullCommand, String shortCommand) {
         this.fullCommand = fullCommand;
         this.shortCommand = shortCommand;
     }
 
-    public boolean equals(String commandStr) {
+    public boolean equals(Command commandStr) {
         if (commandStr == null) {
             return false;
         }
-        return this.fullCommand.equals(commandStr) || this.shortCommand.equals(commandStr);
+        return this.fullCommand.equals(commandStr.toString()) || this.shortCommand.equals(commandStr.toString());
     }
 }

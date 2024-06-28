@@ -9,6 +9,6 @@ public class LockKeyGenerator {
     }
 
     public static List<String> generateLockKeyList(LockType lockType, List<String> keys) {
-        return keys.stream().map((key) -> generateLockKey(lockType, key)).collect(Collectors.toList());
+        return keys.stream().map((key) -> generateLockKey(lockType, key)).toList();
     }
 }

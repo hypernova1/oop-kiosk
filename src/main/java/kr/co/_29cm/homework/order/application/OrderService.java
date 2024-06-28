@@ -1,15 +1,15 @@
 package kr.co._29cm.homework.order.application;
 
-import kr.co._29cm.homework.cart.domain.Cart;
 import kr.co._29cm.homework.order.domain.NoOrderItemException;
 import kr.co._29cm.homework.order.domain.Order;
 import kr.co._29cm.homework.order.domain.OrderRepository;
+import kr.co._29cm.homework.order.payload.OrderRequest;
 import kr.co._29cm.homework.payment.application.PaymentService;
 import kr.co._29cm.homework.product.application.ProductService;
+import kr.co._29cm.homework.product.payload.ProductPriceInfo;
 import kr.co._29cm.homework.product.payload.ProductQuantityInfo;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OrderService {
 
@@ -26,24 +26,26 @@ public class OrderService {
     /**
      * 주문을 생성한다.
      *
-     * @param cart 장바구니
+     * @param orderRequest 주문 정보
      * @return 주문 번호
      * */
-    public String create(Cart cart) {
-        if (cart.isEmpty()) {
+    public String create(OrderRequest orderRequest) {
+        if (orderRequest.products().isEmpty()) {
             throw new NoOrderItemException();
         }
 
-        List<ProductQuantityInfo> productQuantityInfos = cart.getProducts().stream()
-                .map((cartProduct) -> new ProductQuantityInfo(cartProduct.getProduct().productNo(), cartProduct.getQuantity()))
-                .collect(Collectors.toList());
+        List<ProductQuantityInfo> quantityInfos = orderRequest.products().stream()
+                .map((product) -> new ProductQuantityInfo(product.productNo(), product.quantity()))
+                .toList();
+        productService.decreaseStock(quantityInfos);
 
-        productService.decreaseStock(productQuantityInfos);
-        Order order = Order.from(cart);
+        List<String> productNoList = quantityInfos.stream().map(ProductQuantityInfo::productNo).toList();
+        List<ProductPriceInfo> productPrices = productService.getProductPrices(productNoList);
+
+        Order order = Order.of(orderRequest, productPrices);
 
         this.orderRepository.save(order);
         this.paymentService.create(order);
-
         return order.getOrderNo();
     }
 

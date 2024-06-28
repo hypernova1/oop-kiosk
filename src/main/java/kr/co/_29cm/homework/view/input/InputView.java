@@ -1,7 +1,4 @@
-package kr.co._29cm.homework.view;
-
-import kr.co._29cm.homework.common.exception.NotNumberException;
-import kr.co._29cm.homework.util.NumberUtil;
+package kr.co._29cm.homework.view.input;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,9 +16,9 @@ public class InputView {
      *
      * @return 상품 번호
      * */
-    public static String inputProductNoOrCompleteOrder() {
+    public static Command inputProductNoOrCompleteOrder() {
         System.out.print("상품번호 : ");
-        return readLine();
+        return new Command(readLine());
     }
 
     /**
@@ -29,38 +26,17 @@ public class InputView {
      *
      * @return 구매할 상품 수량
      * */
-    public static int inputQuantity() {
+    public static Command inputQuantity() {
         System.out.print("수량 : ");
-        String input = readLine();
-        if (InputCommand.COMPLETE_ORDER.equals(input)) {
-            return -1;
-        }
-
-        if (!NumberUtil.isInteger(input)) {
-            throw new NotNumberException();
-        }
-
-        int quantity = Integer.parseInt(input);
-        if (quantity == 0) {
-            //TODO: 올바른 익셉션으로 변경해야 함
-            throw new NotNumberException();
-        }
-        return quantity;
+        return new Command(readLine());
     }
 
     /**
      * 주문을 계속할지 여부를 입력받는다.
      * */
-    public static boolean isOrderContinue() {
+    public static Command isOrderContinue() {
         System.out.println("계속 주문 하시겠습니까? o[order]: 주문, q[quit]: 종료");
-        String input = readLine().trim();
-        if (InputCommand.CONTINUE_ORDER.equals(input)) {
-            return true;
-        } else if (InputCommand.QUIT.equals(input)) {
-            return false;
-        }
-
-        throw new BadCommandException();
+        return new Command(readLine().trim());
     }
 
     /**

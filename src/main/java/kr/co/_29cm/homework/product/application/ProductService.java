@@ -30,7 +30,7 @@ public class ProductService {
      * */
     public List<ProductDto> getAll() {
         List<Product> products = this.productRepository.findAll();
-        return products.stream().map(ProductDto::new).collect(Collectors.toList());
+        return products.stream().map(ProductDto::new).toList();
     }
 
     /**
@@ -52,7 +52,7 @@ public class ProductService {
     public void decreaseStock(List<ProductQuantityInfo> productQuantityInfos) {
         List<String> productNoList = productQuantityInfos.stream()
                 .map(ProductQuantityInfo::productNo)
-                .collect(Collectors.toList());
+                .toList();
 
         List<String> lockKeys = LockKeyGenerator.generateLockKeyList(LockType.PRODUCT, productNoList);
         try {
@@ -86,6 +86,12 @@ public class ProductService {
 
         return products.stream()
                 .map((product) -> new ProductPriceInfo(product.getProductNo(), product.getPrice()))
-                .collect(Collectors.toList());
+                .toList();
+    }
+
+    public List<ProductDto> findList(List<String> productNoList) {
+        return this.productRepository.findByProductNoList(productNoList).stream()
+                .map(ProductDto::new)
+                .toList();
     }
 }

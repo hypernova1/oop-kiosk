@@ -1,8 +1,7 @@
-package kr.co._29cm.homework.view;
+package kr.co._29cm.homework.view.output;
 
-import kr.co._29cm.homework.cart.domain.CartProduct;
-import kr.co._29cm.homework.payment.domain.Payment;
-import kr.co._29cm.homework.payment.payload.PaymentDto;
+import kr.co._29cm.homework.order.payload.OrderResponseItem;
+import kr.co._29cm.homework.order.payload.OrderResponse;
 import kr.co._29cm.homework.product.payload.ProductDto;
 
 import java.util.List;
@@ -29,10 +28,10 @@ public class OutputView {
     /**
      * 주문할 상품 목록을 출력한다.
      * */
-    public static void printCartProducts(List<CartProduct> cartProducts) {
+    public static void printOrderedProducts(List<OrderResponseItem> cartProducts) {
         System.out.println("주문 내역:");
-        for (CartProduct cartProduct : cartProducts) {
-            System.out.println(cartProduct.getProduct().name() + " - " + cartProduct.getQuantity() + "개");
+        for (OrderResponseItem orderResponseItem : cartProducts) {
+            System.out.println(orderResponseItem.name() + " - " + orderResponseItem.quantity() + "개");
         }
         printBorderLine();
     }
@@ -40,13 +39,14 @@ public class OutputView {
     /**
      * 결제 정보를 출력한다.
      * */
-    public static void printPayment(PaymentDto paymentDto) {
-        System.out.println("주문금액: " + paymentDto.productPrice());
-        if (paymentDto.shippingPrice() > 0) {
-            System.out.println("배송비: " + paymentDto.shippingPrice());
+    public static void printOrder(OrderResponse orderResponse) {
+        printOrderedProducts(orderResponse.products());
+        System.out.println("주문금액: " + orderResponse.productPrice());
+        if (orderResponse.shippingPrice() > 0) {
+            System.out.println("배송비: " + orderResponse.shippingPrice());
         }
         printBorderLine();
-        System.out.println("지불금액: " + paymentDto.totalPaidPrice());
+        System.out.println("지불금액: " + orderResponse.totalPaidPrice());
         printBorderLine();
     }
 

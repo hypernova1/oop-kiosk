@@ -1,8 +1,10 @@
 package kr.co._29cm.homework.order.domain;
 
-import kr.co._29cm.homework.cart.domain.Cart;
-import kr.co._29cm.homework.cart.domain.CartProduct;
 import kr.co._29cm.homework.common.repository.PrimaryKey;
+import kr.co._29cm.homework.order.payload.OrderRequest;
+import kr.co._29cm.homework.order.payload.OrderRequestItem;
+import kr.co._29cm.homework.product.domain.ProductNotFoundException;
+import kr.co._29cm.homework.product.payload.ProductPriceInfo;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,24 +20,29 @@ public class Order {
     private final List<OrderItem> items = new ArrayList<>();
 
     private static final int FREE_SHIPPING_THRESHOLD = 50_000;
+    private static final int SHIPPING_PRICE = 2500;
 
     protected Order() {}
 
-    public static Order from(Cart cart) {
+    public static Order of(OrderRequest orderRequest, List<ProductPriceInfo> productPriceInfos) {
         Order order = new Order();
         order.orderNo = generateOrderNo();
-        order.setOrderItems(cart.getProducts());
+        order.setOrderItems(orderRequest.products(), productPriceInfos);
         return order;
     }
 
     /**
      * 장바구니 상품 목록을 기반으로 주문 아이템 목록을 생성한다.
      *
-     * @param cartProducts 장바구니 상품 목록
+     * @param orderRequestItems 장바구니 상품 목록
      * */
-    private void setOrderItems(List<CartProduct> cartProducts) {
-        for (CartProduct cartProduct : cartProducts) {
-            OrderItem orderItem = OrderItem.from(cartProduct);
+    private void setOrderItems(List<OrderRequestItem> orderRequestItems, List<ProductPriceInfo> productPriceInfos) {
+        for (OrderRequestItem orderRequestItem : orderRequestItems) {
+            ProductPriceInfo productPriceInfo = productPriceInfos.stream()
+                    .filter((pi) -> pi.productNo().equals(orderRequestItem.productNo()))
+                    .findFirst()
+                    .orElseThrow(() -> new ProductNotFoundException(orderRequestItem.productNo()));
+            OrderItem orderItem = OrderItem.of(orderRequestItem, productPriceInfo.price());
             this.items.add(orderItem);
         }
     }

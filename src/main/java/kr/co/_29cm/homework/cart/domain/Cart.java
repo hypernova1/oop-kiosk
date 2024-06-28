@@ -21,13 +21,24 @@ public class Cart {
      * @param quantity 주문 수량
      * */
     public void addProduct(ProductDto productDto, int quantity) {
-        Optional<CartProduct> optionalCartProduct = this.cartProducts.stream()
-                .filter((cartProduct) -> cartProduct.getProduct().equals(productDto)).findFirst();
+        Optional<CartProduct> optionalCartProduct = findCartProductByProductDto(productDto);
         if (optionalCartProduct.isPresent()) {
             optionalCartProduct.get().addQuantity(quantity);
             return;
         }
         this.cartProducts.add(CartProduct.of(productDto, quantity));
+    }
+
+    /**
+     * 상품이 이미 장바구니에 담겨있는지 찾는다.
+     *
+     * @param productDto 상품 정보
+     * @return 동일한 상품
+     * */
+    private Optional<CartProduct> findCartProductByProductDto(ProductDto productDto) {
+        return this.cartProducts.stream()
+                .filter(cartProduct -> cartProduct.getProduct().equals(productDto))
+                .findFirst();
     }
 
     /**

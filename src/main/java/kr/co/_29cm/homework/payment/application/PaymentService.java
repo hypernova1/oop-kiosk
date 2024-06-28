@@ -5,22 +5,19 @@ import kr.co._29cm.homework.payment.domain.Payment;
 import kr.co._29cm.homework.payment.domain.PaymentNotFoundException;
 import kr.co._29cm.homework.payment.domain.PaymentRepository;
 import kr.co._29cm.homework.payment.payload.PaymentDto;
-import kr.co._29cm.homework.product.application.ProductService;
 
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final ProductService productService;
 
-    public PaymentService(PaymentRepository paymentRepository, ProductService productService) {
+    public PaymentService(PaymentRepository paymentRepository) {
         this.paymentRepository = paymentRepository;
-        this.productService = productService;
     }
 
     /**
      * 주문 정보를 기반으로 결제 정보를 생성한다.
      * 
-     * @param 주문 정보
+     * @param order 주문 정보
      * */
     public void create(Order order) {
         Payment payment = Payment.from(order);

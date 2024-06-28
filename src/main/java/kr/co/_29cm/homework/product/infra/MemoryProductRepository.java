@@ -27,7 +27,7 @@ public class MemoryProductRepository extends DefaultMemoryRepository<Product, St
     public List<Product> findByProductNoList(List<String> productNoList) {
         return this.items.stream()
                 .filter((product) -> productNoList.contains(product.getProductNo()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

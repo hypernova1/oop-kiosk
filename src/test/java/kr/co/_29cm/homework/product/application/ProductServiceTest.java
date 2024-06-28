@@ -60,7 +60,7 @@ class ProductServiceTest {
         ProductQuantityInfo quantityInfo = new ProductQuantityInfo(dummyProduct.getProductNo(), 1);
         quantityInfos.add(quantityInfo);
 
-        List<String> productNoList = quantityInfos.stream().map(ProductQuantityInfo::productNo).collect(Collectors.toList());
+        List<String> productNoList = quantityInfos.stream().map(ProductQuantityInfo::productNo).toList();
 
         when(productRepository.findByProductNoList(productNoList)).thenReturn(dummyProducts);
 
