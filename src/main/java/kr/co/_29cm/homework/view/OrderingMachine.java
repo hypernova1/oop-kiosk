@@ -38,10 +38,10 @@ public class OrderingMachine {
                 }
 
                 OrderResponse orderResponse = orderProcessHandler.createOrder();
-                OutputView.printOrder(orderResponse);
+                OutputView.printOrderDetail(orderResponse);
 
-                boolean isTerminated = InputView.inputTerminatedOrOrderContinue().isProgramTerminated();
-                if (isTerminated) {
+                boolean isProgramTerminated = InputView.inputPogramTerminatedOrOrderContinue().isProgramTerminated();
+                if (isProgramTerminated) {
                     break;
                 }
             } catch (BadCommandException | ProductNotFoundException | CartEmptyException | NoOrderItemException e) {
@@ -52,7 +52,7 @@ public class OrderingMachine {
             }
         }
 
-        OutputView.thanksToCustomer();
+        OutputView.printThanksToCustomer();
     }
 
 }

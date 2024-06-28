@@ -28,7 +28,7 @@ public class Command {
         try {
             return new Command(READER.readLine());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new BadCommandException();
         }
     }
 
@@ -43,7 +43,7 @@ public class Command {
      * 프로그램을 종료할 것인지 여부를 확인한다.
      * */
     public boolean isProgramTerminated() {
-        if (InputCommandType.TERMINATED.equals(this)) {
+        if (InputCommandType.TERMINATED_PROGRAM.equals(this)) {
             return true;
         } else if (InputCommandType.CONTINUE_ORDER.equals(this)) {
             return false;

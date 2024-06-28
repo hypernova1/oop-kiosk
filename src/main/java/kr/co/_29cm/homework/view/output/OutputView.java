@@ -39,7 +39,7 @@ public class OutputView {
     /**
      * 주문 정보를 출력한다.
      * */
-    public static void printOrder(OrderResponse orderResponse) {
+    public static void printOrderDetail(OrderResponse orderResponse) {
         printOrderedProducts(orderResponse.products());
         System.out.println("주문금액: " + orderResponse.productPrice());
         if (orderResponse.shippingPrice() > 0) {
@@ -53,7 +53,7 @@ public class OutputView {
     /**
      * 감사 인사를 출력한다.
      * */
-    public static void thanksToCustomer() {
+    public static void printThanksToCustomer() {
         System.out.println("고객님 주문 감사합니다.");
     }
 
