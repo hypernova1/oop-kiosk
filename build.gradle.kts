@@ -1,28 +1,37 @@
 plugins {
-    id("java")
-    kotlin("jvm")
+    java
+    id("org.springframework.boot") version "3.3.1"
+    id("io.spring.dependency-management") version "1.1.5"
 }
 
-group = "kr.co._29cm"
-version = "1.0-SNAPSHOT"
+group = "com.example"
+version = "0.0.1-SNAPSHOT"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom(configurations.annotationProcessor.get())
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.assertj:assertj-core:3.26.0")
-    testImplementation("org.mockito:mockito-core:5.12.0")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.12.0")
-
-    implementation(kotlin("stdlib-jdk8"))
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    compileOnly("org.projectlombok:lombok")
+    runtimeOnly("com.h2database:h2")
+    annotationProcessor("org.projectlombok:lombok")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-tasks.test {
+tasks.withType<Test> {
     useJUnitPlatform()
-}
-kotlin {
-    jvmToolchain(17)
 }

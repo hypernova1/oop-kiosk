@@ -10,6 +10,7 @@ import kr.co._29cm.homework.payment.payload.PaymentResponse;
 import kr.co._29cm.homework.product.application.ProductService;
 import kr.co._29cm.homework.product.payload.ProductDto;
 import kr.co._29cm.homework.view.input.BadCommandException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
  *
  * @see kr.co._29cm.homework.view.OrderingMachine
  * */
+@Service
 public class OrderProcessHandler {
 
     private final ProductService productService;

@@ -6,11 +6,13 @@ import kr.co._29cm.homework.product.domain.ProductRepository;
 import kr.co._29cm.homework.util.csv.CsvData;
 import kr.co._29cm.homework.util.csv.CsvDataReader;
 import kr.co._29cm.homework.util.csv.CsvToInstanceConvertor;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Repository
 public class MemoryProductRepository extends DefaultMemoryRepository<Product, String> implements ProductRepository {
 
     public MemoryProductRepository() {

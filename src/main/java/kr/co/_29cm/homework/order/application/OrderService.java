@@ -8,9 +8,11 @@ import kr.co._29cm.homework.payment.application.PaymentService;
 import kr.co._29cm.homework.product.application.ProductService;
 import kr.co._29cm.homework.product.payload.ProductPriceDto;
 import kr.co._29cm.homework.product.payload.ProductQuantityDto;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class OrderService {
 
     private final OrderRepository orderRepository;

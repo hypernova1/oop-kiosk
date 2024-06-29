@@ -5,7 +5,9 @@ import kr.co._29cm.homework.payment.domain.Payment;
 import kr.co._29cm.homework.payment.domain.PaymentNotFoundException;
 import kr.co._29cm.homework.payment.domain.PaymentRepository;
 import kr.co._29cm.homework.payment.payload.PaymentResponse;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;

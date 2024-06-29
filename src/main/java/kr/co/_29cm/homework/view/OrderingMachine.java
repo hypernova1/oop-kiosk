@@ -10,9 +10,11 @@ import kr.co._29cm.homework.view.input.BadCommandException;
 import kr.co._29cm.homework.view.input.Command;
 import kr.co._29cm.homework.view.input.InputView;
 import kr.co._29cm.homework.view.output.OutputView;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class OrderingMachine {
 
     private final OrderProcessHandler orderProcessHandler;

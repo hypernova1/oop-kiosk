@@ -3,9 +3,11 @@ package kr.co._29cm.homework.payment.infra;
 import kr.co._29cm.homework.common.repository.DefaultMemoryRepository;
 import kr.co._29cm.homework.payment.domain.Payment;
 import kr.co._29cm.homework.payment.domain.PaymentRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public class MemoryPaymentRepository extends DefaultMemoryRepository<Payment, String> implements PaymentRepository {
     @Override
     public Optional<Payment> findByOrderNo(String orderNo) {

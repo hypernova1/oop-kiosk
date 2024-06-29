@@ -9,9 +9,11 @@ import kr.co._29cm.homework.product.domain.ProductRepository;
 import kr.co._29cm.homework.product.payload.ProductDto;
 import kr.co._29cm.homework.product.payload.ProductPriceDto;
 import kr.co._29cm.homework.product.payload.ProductQuantityDto;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ProductService {
 
     private final ProductRepository productRepository;

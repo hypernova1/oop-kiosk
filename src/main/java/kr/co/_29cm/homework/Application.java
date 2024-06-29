@@ -10,15 +10,24 @@ import kr.co._29cm.homework.product.application.ProductService;
 import kr.co._29cm.homework.product.infra.MemoryProductRepository;
 import kr.co._29cm.homework.view.OrderProcessHandler;
 import kr.co._29cm.homework.view.OrderingMachine;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
+@SpringBootApplication
 public class Application {
     public static void main(String[] args) {
-        ProductService productService = new ProductService(new MemoryProductRepository(), new MemoryLockManager());
-        PaymentService paymentService = new PaymentService(new MemoryPaymentRepository());
-        OrderService orderService = new OrderService(new MemoryOrderRepository(), productService, paymentService);
-        OrderProcessHandler orderProcessHandler = new OrderProcessHandler(productService, orderService, paymentService);
+        SpringApplication application = new SpringApplication(Application.class);
+        application.setWebApplicationType(WebApplicationType.NONE);
+        application.run(args);
+    }
 
-        OrderingMachine orderingMachine = new OrderingMachine(orderProcessHandler);
-        orderingMachine.process();
+    @Bean
+    public CommandLineRunner commandLineRunner(OrderingMachine orderingMachine) {
+        return args -> {
+            orderingMachine.process();
+        };
     }
 }
