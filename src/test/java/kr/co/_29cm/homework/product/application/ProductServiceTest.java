@@ -59,7 +59,7 @@ class ProductServiceTest {
 
         List<String> productNoList = productQuantityDtoList.stream().map(ProductQuantityDto::productNo).toList();
 
-        when(productRepository.findByProductNoList(productNoList)).thenReturn(dummyProducts);
+        when(productRepository.findByProductNoIn(productNoList)).thenReturn(dummyProducts);
 
         ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OR_THREADS);
         CountDownLatch latch = new CountDownLatch(NUMBER_OR_THREADS);

@@ -5,16 +5,14 @@ import kr.co._29cm.homework.payment.domain.Payment;
 import kr.co._29cm.homework.payment.domain.PaymentNotFoundException;
 import kr.co._29cm.homework.payment.domain.PaymentRepository;
 import kr.co._29cm.homework.payment.payload.PaymentResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
-
-    public PaymentService(PaymentRepository paymentRepository) {
-        this.paymentRepository = paymentRepository;
-    }
 
     /**
      * 주문 정보를 기반으로 결제 정보를 생성한다.

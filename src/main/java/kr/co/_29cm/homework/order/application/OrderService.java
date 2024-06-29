@@ -8,22 +8,18 @@ import kr.co._29cm.homework.payment.application.PaymentService;
 import kr.co._29cm.homework.product.application.ProductService;
 import kr.co._29cm.homework.product.payload.ProductPriceDto;
 import kr.co._29cm.homework.product.payload.ProductQuantityDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductService productService;
     private final PaymentService paymentService;
-
-    public OrderService(OrderRepository orderRepository, ProductService productService, PaymentService paymentService) {
-        this.orderRepository = orderRepository;
-        this.productService = productService;
-        this.paymentService = paymentService;
-    }
 
     /**
      * 주문을 생성한다.

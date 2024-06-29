@@ -9,9 +9,9 @@ public interface ProductRepository {
 
     Optional<Product> findByProductNo(String productNo);
 
-    List<Product> findByProductNoList(List<String> productNoList);
+    List<Product> findByProductNoIn(List<String> productNoList);
 
-    void save(Product product);
+    Product save(Product product);
 
     void save(List<Product> products);
 }

@@ -9,20 +9,17 @@ import kr.co._29cm.homework.product.domain.ProductRepository;
 import kr.co._29cm.homework.product.payload.ProductDto;
 import kr.co._29cm.homework.product.payload.ProductPriceDto;
 import kr.co._29cm.homework.product.payload.ProductQuantityDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
     private final LockManager lockManager;
-
-    public ProductService(ProductRepository productRepository, LockManager lockManager) {
-        this.productRepository = productRepository;
-        this.lockManager = lockManager;
-    }
 
     /**
      * 모든 상품을 가져온다.
@@ -59,7 +56,7 @@ public class ProductService {
         try {
             lockManager.acquireList(lockKeys);
 
-            List<Product> products = this.productRepository.findByProductNoList(productNoList);
+            List<Product> products = this.productRepository.findByProductNoIn(productNoList);
 
             for (ProductQuantityDto quantityInfo : productQuantities) {
                 Product product = products.stream()
@@ -83,7 +80,7 @@ public class ProductService {
      * @return 상품 가격 정보 목록
      * */
     public List<ProductPriceDto> getProductPrices(List<String> productNoList) {
-        List<Product> products = this.productRepository.findByProductNoList(productNoList);
+        List<Product> products = this.productRepository.findByProductNoIn(productNoList);
 
         return products.stream()
                 .map((product) -> new ProductPriceDto(product.getProductNo(), product.getPrice()))
@@ -91,7 +88,7 @@ public class ProductService {
     }
 
     public List<ProductDto> findList(List<String> productNoList) {
-        return this.productRepository.findByProductNoList(productNoList).stream()
+        return this.productRepository.findByProductNoIn(productNoList).stream()
                 .map(ProductDto::new)
                 .toList();
     }

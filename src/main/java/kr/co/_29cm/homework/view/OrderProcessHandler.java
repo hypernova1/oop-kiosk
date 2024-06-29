@@ -1,15 +1,18 @@
 package kr.co._29cm.homework.view;
 
-import kr.co._29cm.homework.cart.domain.Cart;
+import kr.co._29cm.homework.cart.domain.CartItem;
+import kr.co._29cm.homework.cart.application.CartService;
+import kr.co._29cm.homework.cart.payload.CartItemDto;
 import kr.co._29cm.homework.order.application.OrderService;
 import kr.co._29cm.homework.order.payload.OrderRequest;
-import kr.co._29cm.homework.order.payload.OrderResponse;
 import kr.co._29cm.homework.order.payload.OrderRequestItem;
+import kr.co._29cm.homework.order.payload.OrderResponse;
 import kr.co._29cm.homework.payment.application.PaymentService;
 import kr.co._29cm.homework.payment.payload.PaymentResponse;
 import kr.co._29cm.homework.product.application.ProductService;
 import kr.co._29cm.homework.product.payload.ProductDto;
 import kr.co._29cm.homework.view.input.BadCommandException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,47 +23,43 @@ import java.util.List;
  * @see kr.co._29cm.homework.view.OrderingMachine
  * */
 @Service
+@RequiredArgsConstructor
 public class OrderProcessHandler {
 
     private final ProductService productService;
     private final OrderService orderService;
     private final PaymentService paymentService;
-    private final Cart cart;
+    private final CartService  cartService;
 
-    public OrderProcessHandler(ProductService productService, OrderService orderService, PaymentService paymentService) {
-        this.productService = productService;
-        this.orderService = orderService;
-        this.paymentService = paymentService;
-        this.cart = new Cart();
-    }
 
     /**
      * 장바구니에 상품을 추가한다.
      *
+     * @param userId 유저 아이디
      * @param productNo 상품
      * @param quantity 구매할 수량
-     * @param cart 장바구니
      */
-    public void addProductToCart(String productNo, int quantity) {
+    public void addProductToCart(String userId, String productNo, int quantity) {
         validateOrderData(productNo, quantity);
-        ProductDto product = productService.findOne(productNo);
-        cart.addProduct(product, quantity);
+        cartService.addItem(userId, productNo, quantity);
     }
 
     /**
      * 주문을 생성하고 주문 번호를 반환한다.
      *
-     * @param cart 장바구니
+     * @param userId 유저 아이디
      */
-    public OrderResponse createOrder() {
-        List<OrderRequestItem> productQuantityInfos = cart.getItems().stream()
-                .map(cartProduct -> new OrderRequestItem(cartProduct.getProduct().productNo(), cartProduct.getQuantity()))
+    public OrderResponse createOrder(String userId) {
+        List<CartItemDto> cartItems = this.cartService.findItems(userId);
+        List<OrderRequestItem> productQuantityInfos = cartItems.stream()
+                .map(cartItem -> new OrderRequestItem(cartItem.productNo(), cartItem.quantity()))
                 .toList();
 
-        OrderRequest orderRequest = new OrderRequest(productQuantityInfos);
+        OrderRequest orderRequest = new OrderRequest(productQuantityInfos, userId);
         String orderNo = orderService.create(orderRequest);
         PaymentResponse paymentResponse = paymentService.findOne(orderNo);
-        cart.clear();
+
+        this.cartService.clearCart(userId);
 
         List<String> productNoList = productQuantityInfos.stream()
                 .map(OrderRequestItem::productNo)
@@ -89,7 +88,21 @@ public class OrderProcessHandler {
         return productService.getAll();
     }
 
-    public void clearCart() {
-        this.cart.clear();
+    /**
+     * 장바구니를 비운다.
+     *
+     * @param userId 유저 아이디
+     * */
+    public void clearCart(String userId) {
+        this.cartService.clearCart(userId);
+    }
+
+    /**
+     * 장바구니를 준비한다.
+     *
+     * @param userId 유저 아이디
+     * */
+    public void loadCart(String userId) {
+        this.cartService.create(userId);
     }
 }

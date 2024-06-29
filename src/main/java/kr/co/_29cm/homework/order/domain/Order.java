@@ -1,33 +1,42 @@
 package kr.co._29cm.homework.order.domain;
 
-import kr.co._29cm.homework.common.repository.PrimaryKey;
+import jakarta.persistence.*;
 import kr.co._29cm.homework.order.payload.OrderRequest;
 import kr.co._29cm.homework.order.payload.OrderRequestItem;
 import kr.co._29cm.homework.product.domain.ProductNotFoundException;
 import kr.co._29cm.homework.product.payload.ProductPriceDto;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@Table(name = "`order`")
 public class Order {
 
-    @PrimaryKey
+    @Id
     private String orderNo;
 
+    @OneToMany(mappedBy = "order")
     private final List<OrderItem> items = new ArrayList<>();
+
+    @Column
+    private String userId;
 
     private static final int FREE_SHIPPING_THRESHOLD = 50_000;
     private static final int SHIPPING_PRICE = 2500;
-
-    protected Order() {}
 
     public static Order of(OrderRequest orderRequest, List<ProductPriceDto> productPriceDtos) {
         Order order = new Order();
         order.orderNo = generateOrderNo();
         order.setOrderItems(orderRequest.products(), productPriceDtos);
+        order.userId = orderRequest.userId();
         return order;
     }
 
@@ -45,20 +54,6 @@ public class Order {
             OrderItem orderItem = OrderItem.of(orderRequestItem, productPriceDto.price());
             this.items.add(orderItem);
         }
-    }
-
-    /**
-     * 주문 번호를 가져온다.
-     * */
-    public String getOrderNo() {
-        return this.orderNo;
-    }
-
-    /**
-     * 주문 아이템 목록을 가져온다.
-     * */
-    public List<OrderItem> getOrderItems() {
-        return this.items;
     }
 
     /**
@@ -87,18 +82,6 @@ public class Order {
      * */
     static String generateOrderNo() {
         return DateTimeFormatter.ofPattern("YYYYMMddHHmmss").format(LocalDateTime.now());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.orderNo);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Order order)) return false;
-        return Objects.equals(this.orderNo, order.getOrderNo());
     }
 
 }

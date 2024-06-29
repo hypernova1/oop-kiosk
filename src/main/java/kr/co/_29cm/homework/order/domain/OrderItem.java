@@ -1,12 +1,30 @@
 package kr.co._29cm.homework.order.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import kr.co._29cm.homework.common.BaseUuidEntity;
 import kr.co._29cm.homework.order.payload.OrderRequestItem;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-public class OrderItem {
+@Getter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class OrderItem extends BaseUuidEntity {
 
+    @Column
     private String productNo;
+
+    @Column
     private int productPrice;
+
+    @Column
     private int quantity;
+
+    @ManyToOne
+    private Order order;
 
     /**
      * 장바구니 상품 정보로 주문 아이템을 생성한다.
@@ -20,33 +38,6 @@ public class OrderItem {
         orderItem.quantity = orderRequestItem.quantity();
         orderItem.productPrice = price;
         return orderItem;
-    }
-
-    /**
-     * 상품 번호를 가져온다.
-     *
-     * @return 상품 번호
-     * */
-    public String getProductNo() {
-        return this.productNo;
-    }
-
-    /**
-     * 주문 수량을 가져온다.
-     *
-     * @return 주문 수량
-     * */
-    public int getQuantity() {
-        return this.quantity;
-    }
-
-    /**
-     * 상품 가격을 가져온다.
-     *
-     * @return 상품 가격
-     * */
-    public int getProductPrice() {
-        return this.productPrice;
     }
 
     /**

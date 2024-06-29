@@ -1,11 +1,26 @@
 package kr.co._29cm.homework.cart.domain;
 
-import kr.co._29cm.homework.product.payload.ProductDto;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import kr.co._29cm.homework.common.BaseUuidEntity;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-public class CartItem {
+@Getter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class CartItem extends BaseUuidEntity {
 
-    private ProductDto product;
+    @Column
+    private String productNo;
+
+    @Column
     private int quantity;
+
+    @ManyToOne
+    private Cart cart;
 
     /**
      * 장바구니 상품을 생성한다.
@@ -13,9 +28,9 @@ public class CartItem {
      * @param product 상품 정보
      * @param quantity 수량
      * */
-    public static CartItem of(ProductDto product, int quantity) {
+    public static CartItem of(String productNo, int quantity) {
         CartItem cartItem = new CartItem();
-        cartItem.product = product;
+        cartItem.productNo = productNo;
         cartItem.quantity = quantity;
         return cartItem;
     }
@@ -27,23 +42,5 @@ public class CartItem {
      * */
     public void addQuantity(int quantity) {
         this.quantity += quantity;
-    }
-
-    /**
-     * 상품 정보를 가져온다.
-     *
-     * @return 상품 정보
-     * */
-    public ProductDto getProduct() {
-        return this.product;
-    }
-
-    /**
-     * 수량을 가져온다.
-     *
-     * @return 수량
-     * */
-    public int getQuantity() {
-        return this.quantity;
     }
 }

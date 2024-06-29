@@ -1,69 +1,29 @@
 package kr.co._29cm.homework.product.domain;
 
-import kr.co._29cm.homework.common.repository.PrimaryKey;
-import kr.co._29cm.homework.util.csv.CsvFieldMatcher;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
+@Getter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
-    @PrimaryKey
-    @CsvFieldMatcher("상품번호")
+    @Id
     private String productNo;
 
-    @CsvFieldMatcher("상품명")
+    @Column
     private String name;
 
-    @CsvFieldMatcher("판매가격")
+    @Column
     private int price;
 
-    @CsvFieldMatcher("재고수량")
-    private int stock;
-
-    protected Product() {}
-
-    protected Product(String productNo, String name, int price, int stock) {
-        this.productNo = productNo;
-        this.name = name;
-        this.price = price;
-        this.stock = stock;
-    }
-
-    /**
-     * 상품 번호를 가져온다.
-     *
-     * @return 상품 번호
-     * */
-    public String getProductNo() {
-        return this.productNo;
-    }
-
-    /**
-     * 상품 이름을 가져온다.
-     *
-     * @return 상품 이름
-     * */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * 상품 가격을 가져온다.
-     *
-     * @return 상품 가격
-     * */
-    public int getPrice() {
-        return this.price;
-    }
-
-    /**
-     * 상품의 재고를 가져온다.
-     *
-     * @return 상품 재고
-     * */
-    public int getStock() {
-        return this.stock;
-    }
+    @OneToOne(mappedBy = "product")
+    private Stock stock;
 
     /**
      * 상품의 수량을 낮춘다.
@@ -71,21 +31,10 @@ public class Product {
      * @param quantity 낮출 수량
      * */
     public void decreaseStock(int quantity) {
-        if (this.stock < quantity) {
-            throw new SoldOutException(productNo, this.stock, quantity);
+        if (this.stock.getStock() < quantity) {
+            throw new SoldOutException(productNo, this.stock.getStock(), quantity);
         }
-        this.stock -= quantity;
+        this.stock.decreaseStock(quantity);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.productNo);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Product product)) return false;
-        return Objects.equals(this.productNo, product.getProductNo());
-    }
 }

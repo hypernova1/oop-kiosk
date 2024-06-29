@@ -10,23 +10,24 @@ import kr.co._29cm.homework.view.input.BadCommandException;
 import kr.co._29cm.homework.view.input.Command;
 import kr.co._29cm.homework.view.input.InputView;
 import kr.co._29cm.homework.view.output.OutputView;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderingMachine {
 
     private final OrderProcessHandler orderProcessHandler;
 
-    public OrderingMachine(OrderProcessHandler orderProcessHandler) {
-        this.orderProcessHandler = orderProcessHandler;
-    }
 
     /**
      * 주문 프로세스를 시작한다.
      */
-    public void process() {
+    public void process(String userId) {
+        orderProcessHandler.loadCart(userId);
+
         List<ProductDto> products = orderProcessHandler.getAllProducts();
         OutputView.printProducts(products);
 
@@ -35,11 +36,11 @@ public class OrderingMachine {
                 Command productNoOrIsCompleteOrderInput = InputView.inputProductNoOrIsCompleteOrder();
                 if (!productNoOrIsCompleteOrderInput.isCompleteOrder()) {
                     Command quantityInput = InputView.inputQuantity();
-                    orderProcessHandler.addProductToCart(productNoOrIsCompleteOrderInput.toString(), quantityInput.toInt());
+                    orderProcessHandler.addProductToCart(userId, productNoOrIsCompleteOrderInput.toString(), quantityInput.toInt());
                     continue;
                 }
 
-                OrderResponse orderResponse = orderProcessHandler.createOrder();
+                OrderResponse orderResponse = orderProcessHandler.createOrder(userId);
                 OutputView.printOrderDetail(orderResponse);
 
                 boolean isProgramTerminated = InputView.inputPogramTerminatedOrOrderContinue().isProgramTerminated();
@@ -50,7 +51,7 @@ public class OrderingMachine {
                 OutputView.printException(e);
             } catch (SoldOutException e) {
                 OutputView.printException(e);
-                orderProcessHandler.clearCart();
+                orderProcessHandler.clearCart(userId);
             }
         }
 
