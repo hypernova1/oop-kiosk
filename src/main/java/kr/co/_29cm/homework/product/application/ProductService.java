@@ -44,7 +44,7 @@ public class ProductService {
     }
 
     /**
-     * 상품의 수량을 뺀다.
+     * 상품의 수량을 감소시킨다.
      *
      * @param productQuantities 상품 수량 정보
      * */
