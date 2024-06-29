@@ -75,6 +75,13 @@ public class Order {
         return this.items.stream().mapToInt(OrderItem::getTotalProductPrice).sum();
     }
 
+    public int getShippingPrice() {
+        if (isFreeShipping()) {
+            return 0;
+        }
+        return SHIPPING_PRICE;
+    }
+
     /**
      * 주문 번호를 생성한다.
      * */
@@ -93,4 +100,5 @@ public class Order {
         if (!(o instanceof Order order)) return false;
         return Objects.equals(this.orderNo, order.getOrderNo());
     }
+
 }

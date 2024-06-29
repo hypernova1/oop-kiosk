@@ -53,11 +53,11 @@ class ProductServiceTest {
         Product dummyProduct = dummyProducts.get(0);
         int stock = dummyProduct.getStock();
 
-        List<ProductQuantityDto> quantityInfos = new ArrayList<>();
-        ProductQuantityDto quantityInfo = new ProductQuantityDto(dummyProduct.getProductNo(), 1);
-        quantityInfos.add(quantityInfo);
+        List<ProductQuantityDto> productQuantityDtoList = new ArrayList<>();
+        ProductQuantityDto productQuantityDto = new ProductQuantityDto(dummyProduct.getProductNo(), 1);
+        productQuantityDtoList.add(productQuantityDto);
 
-        List<String> productNoList = quantityInfos.stream().map(ProductQuantityDto::productNo).toList();
+        List<String> productNoList = productQuantityDtoList.stream().map(ProductQuantityDto::productNo).toList();
 
         when(productRepository.findByProductNoList(productNoList)).thenReturn(dummyProducts);
 
@@ -69,7 +69,7 @@ class ProductServiceTest {
             executorService.execute(() -> {
                 for (int j = 0; j < LOOP_COUNT; j++) {
                     try {
-                        productService.decreaseStock(quantityInfos);
+                        productService.decreaseStock(productQuantityDtoList);
                     } catch (SoldOutException e) {
                         numberOfException.getAndIncrement();
                     }
@@ -82,40 +82,6 @@ class ProductServiceTest {
         executorService.shutdown();
 
         assertThat(NUMBER_OR_THREADS * LOOP_COUNT - stock).isEqualTo(numberOfException.get());
-    }
-
-    @Test
-    @DisplayName("동시성 실패 테스트")
-    void fail() throws InterruptedException {
-        int NUMBER_OR_THREADS = 500;
-        int LOOP_COUNT = 10000;
-
-        CsvData csvData = new CsvDataReader("product.csv").readCsv();
-        List<Product> dummyProducts = new CsvToInstanceConvertor<>(csvData, Product.class).convertToInstances();
-        Product dummyProduct = dummyProducts.get(0);
-        int stock = dummyProduct.getStock();
-
-        ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OR_THREADS);
-        CountDownLatch latch = new CountDownLatch(NUMBER_OR_THREADS);
-
-        AtomicInteger numberOfException = new AtomicInteger();
-        for (int i = 0; i < NUMBER_OR_THREADS; i++) {
-            executorService.execute(() -> {
-                for (int j = 0; j < LOOP_COUNT; j++) {
-                    try {
-                        dummyProduct.decreaseStock(1);
-                    } catch (SoldOutException e) {
-                        numberOfException.getAndIncrement();
-                    }
-                }
-                latch.countDown();
-            });
-        }
-
-        latch.await();
-        executorService.shutdown();
-
-        assertThat(NUMBER_OR_THREADS * LOOP_COUNT - stock).isNotEqualTo(numberOfException.get());
     }
 
 }

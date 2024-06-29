@@ -28,7 +28,7 @@ public class Payment {
         payment.id = UUID.randomUUID().toString();
         payment.orderNo = order.getOrderNo();
         payment.productPrice = order.getTotalProductPrice();
-        payment.shippingPrice = order.isFreeShipping() ? 0 : 2500;
+        payment.shippingPrice = order.getShippingPrice();
         payment.totalPaidPrice = payment.productPrice + payment.shippingPrice;
         payment.orderNo = order.getOrderNo();
         return payment;

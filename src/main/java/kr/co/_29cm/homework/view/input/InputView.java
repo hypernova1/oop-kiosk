@@ -9,7 +9,7 @@ public class InputView {
      *
      * @return 상품 번호
      * */
-    public static Command inputProductNoOrCompleteOrder() {
+    public static Command inputProductNoOrIsCompleteOrder() {
         System.out.print("상품번호 : ");
         return Command.call();
     }

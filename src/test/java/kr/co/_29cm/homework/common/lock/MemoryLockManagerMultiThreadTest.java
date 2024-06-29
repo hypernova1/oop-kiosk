@@ -68,7 +68,7 @@ public class MemoryLockManagerMultiThreadTest {
             public final AtomicInteger releaseCallCount = new AtomicInteger(0);
 
             @Override
-            public  void set(String id) {
+            public void set(String id) {
                 super.set(id);
                 this.setCallCount.incrementAndGet();
             }
