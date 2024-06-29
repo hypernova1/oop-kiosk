@@ -1,20 +1,20 @@
 package kr.co._29cm.homework.product.application;
 
 import kr.co._29cm.homework.common.lock.LockManager;
-import kr.co._29cm.homework.common.lock.MemoryLockManager;
 import kr.co._29cm.homework.product.domain.Product;
 import kr.co._29cm.homework.product.domain.ProductRepository;
 import kr.co._29cm.homework.product.domain.SoldOutException;
+import kr.co._29cm.homework.product.domain.Stock;
 import kr.co._29cm.homework.product.payload.ProductQuantityDto;
-import kr.co._29cm.homework.util.csv.CsvData;
-import kr.co._29cm.homework.util.csv.CsvDataReader;
-import kr.co._29cm.homework.util.csv.CsvToInstanceConvertor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +27,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
 
-    private final LockManager lockManager = new MemoryLockManager();
+    @Autowired
+    private LockManager lockManager;
 
+    @InjectMocks
     private ProductService productService;
 
     @BeforeEach
@@ -48,18 +51,19 @@ class ProductServiceTest {
         int NUMBER_OR_THREADS = 500;
         int LOOP_COUNT = 100;
 
-        CsvData csvData = new CsvDataReader("product.csv").readCsv();
-        List<Product> dummyProducts = new CsvToInstanceConvertor<>(csvData, Product.class).convertToInstances();
-        Product dummyProduct = dummyProducts.get(0);
-        int stock = dummyProduct.getStock();
+        int stock = 50;
+
+        Product product = new Product("10000", "테스트 상품", 10_000, new Stock(stock));
 
         List<ProductQuantityDto> productQuantityDtoList = new ArrayList<>();
-        ProductQuantityDto productQuantityDto = new ProductQuantityDto(dummyProduct.getProductNo(), 1);
+        ProductQuantityDto productQuantityDto = new ProductQuantityDto(product.getProductNo(), 1);
         productQuantityDtoList.add(productQuantityDto);
 
         List<String> productNoList = productQuantityDtoList.stream().map(ProductQuantityDto::productNo).toList();
 
-        when(productRepository.findByProductNoIn(productNoList)).thenReturn(dummyProducts);
+        List<Product> products = List.of(product);
+
+        when(productRepository.findByProductNoIn(productNoList)).thenReturn(products);
 
         ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OR_THREADS);
         CountDownLatch latch = new CountDownLatch(NUMBER_OR_THREADS);

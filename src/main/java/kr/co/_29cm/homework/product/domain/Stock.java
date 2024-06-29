@@ -16,6 +16,10 @@ public class Stock extends BaseUuidEntity {
     @OneToOne
     private Product product;
 
+    public Stock(int stock) {
+        this.stock = stock;
+    }
+
     public void decreaseStock(int quantity) {
         this.stock -= quantity;
     }

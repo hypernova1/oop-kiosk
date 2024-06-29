@@ -7,9 +7,11 @@ import kr.co._29cm.homework.payment.domain.PaymentRepository;
 import kr.co._29cm.homework.payment.payload.PaymentResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
@@ -19,6 +21,7 @@ public class PaymentService {
      * 
      * @param order 주문 정보
      * */
+    @Transactional
     public void create(Order order) {
         Payment payment = Payment.from(order);
         this.paymentRepository.save(payment);

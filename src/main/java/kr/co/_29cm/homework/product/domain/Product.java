@@ -25,6 +25,13 @@ public class Product {
     @OneToOne(mappedBy = "product")
     private Stock stock;
 
+    public Product(String productNo, String name, int price, Stock stock) {
+        this.productNo = productNo;
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+    }
+
     /**
      * 상품의 수량을 낮춘다.
      *

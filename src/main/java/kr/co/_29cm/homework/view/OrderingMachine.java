@@ -36,7 +36,9 @@ public class OrderingMachine {
                 Command productNoOrIsCompleteOrderInput = InputView.inputProductNoOrIsCompleteOrder();
                 if (!productNoOrIsCompleteOrderInput.isCompleteOrder()) {
                     Command quantityInput = InputView.inputQuantity();
-                    orderProcessHandler.addProductToCart(userId, productNoOrIsCompleteOrderInput.toString(), quantityInput.toInt());
+                    String productNo = productNoOrIsCompleteOrderInput.toString();
+                    int quantity = quantityInput.toInt();
+                    orderProcessHandler.addProductToCart(userId, productNo, quantity);
                     continue;
                 }
 

@@ -1,6 +1,5 @@
 package kr.co._29cm.homework.view;
 
-import kr.co._29cm.homework.cart.domain.CartItem;
 import kr.co._29cm.homework.cart.application.CartService;
 import kr.co._29cm.homework.cart.payload.CartItemDto;
 import kr.co._29cm.homework.order.application.OrderService;

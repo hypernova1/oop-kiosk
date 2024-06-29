@@ -10,11 +10,13 @@ import kr.co._29cm.homework.product.payload.ProductPriceDto;
 import kr.co._29cm.homework.product.payload.ProductQuantityDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -27,6 +29,7 @@ public class OrderService {
      * @param orderRequest 주문 정보
      * @return 주문 번호
      * */
+    @Transactional
     public String create(OrderRequest orderRequest) {
         if (orderRequest.products().isEmpty()) {
             throw new NoOrderItemException();
