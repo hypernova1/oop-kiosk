@@ -70,35 +70,6 @@ public class ProductService {
 
                 product.decreaseStock(quantityInfo.quantity());
             }
-
-        } finally {
-            lockManager.releaseList(lockKeys);
-        }
-    }
-
-    /**
-     * 감소 시켰던 수량을 롤백 시킨다.
-     * */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void rollbackStock(List<ProductQuantityDto> productQuantities) {
-        List<String> productNoList = productQuantities.stream()
-                .map(ProductQuantityDto::productNo)
-                .toList();
-
-        List<String> lockKeys = LockKeyGenerator.generateLockKeyList(LockType.PRODUCT, productNoList);
-        try {
-            lockManager.acquireList(lockKeys);
-
-            List<Product> products = this.productRepository.findByProductNoIn(productNoList);
-
-            for (ProductQuantityDto quantityInfo : productQuantities) {
-                Product product = products.stream()
-                        .filter((p) -> p.getProductNo().equals(quantityInfo.productNo()))
-                        .findFirst()
-                        .orElseThrow(() -> new ProductNotFoundException(quantityInfo.productNo()));
-
-                product.rollbackStock(quantityInfo.quantity());
-            }
         } finally {
             lockManager.releaseList(lockKeys);
         }

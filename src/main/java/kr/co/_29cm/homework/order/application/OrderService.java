@@ -7,9 +7,11 @@ import kr.co._29cm.homework.order.payload.OrderRequest;
 import kr.co._29cm.homework.payment.application.PaymentService;
 import kr.co._29cm.homework.payment.payload.PaymentRequest;
 import kr.co._29cm.homework.product.application.ProductService;
+import kr.co._29cm.homework.product.application.StockRollbackEvent;
 import kr.co._29cm.homework.product.payload.ProductPriceDto;
 import kr.co._29cm.homework.product.payload.ProductQuantityDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductService productService;
     private final PaymentService paymentService;
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * 주문을 생성한다.
@@ -58,7 +61,7 @@ public class OrderService {
             );
             return order.getOrderNo();
         } catch (RuntimeException e) {
-            this.productService.rollbackStock(productQuantityDtoList);
+            this.eventPublisher.publishEvent(new StockRollbackEvent(productQuantityDtoList));
             throw e;
         }
     }

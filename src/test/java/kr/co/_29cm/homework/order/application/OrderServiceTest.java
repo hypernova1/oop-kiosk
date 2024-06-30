@@ -6,6 +6,7 @@ import kr.co._29cm.homework.order.payload.OrderRequest;
 import kr.co._29cm.homework.order.payload.OrderRequestItem;
 import kr.co._29cm.homework.payment.application.PaymentService;
 import kr.co._29cm.homework.product.application.ProductService;
+import kr.co._29cm.homework.product.application.StockRollbackEvent;
 import kr.co._29cm.homework.product.payload.ProductPriceDto;
 import kr.co._29cm.homework.product.payload.ProductQuantityDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,12 +36,15 @@ class OrderServiceTest {
     @Mock
     private PaymentService paymentService;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
+
     @InjectMocks
     private OrderService orderService;
 
     @BeforeEach
     void init() {
-        this.orderService = new OrderService(orderRepository, productService, paymentService);
+        this.orderService = new OrderService(orderRepository, productService, paymentService, eventPublisher);
     }
 
 
@@ -97,7 +102,7 @@ class OrderServiceTest {
 
         //then
         verify(productService, times(1)).decreaseStock(productQuantityDtoList);
-        verify(productService, times(1)).rollbackStock(productQuantityDtoList);
+        verify(eventPublisher, times(1)).publishEvent(new StockRollbackEvent(productQuantityDtoList));
     }
 
 
