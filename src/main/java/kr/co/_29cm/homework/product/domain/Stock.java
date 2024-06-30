@@ -1,30 +1,46 @@
 package kr.co._29cm.homework.product.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import kr.co._29cm.homework.common.BaseUuidEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 @Getter
-@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Comment("상품 재고")
+@Table(name = "stock", indexes = @Index(name = "idx_product_stock_product_no", columnList = "product_no"))
+@Entity
 public class Stock extends BaseUuidEntity {
 
-    private int stock;
+    @Comment("수량")
+    @Column(name = "amount", nullable = false, columnDefinition = "int")
+    private int amount;
+
     @OneToOne
+    @JoinColumn(name = "product_no", referencedColumnName = "product_no")
     private Product product;
 
-    public Stock(int stock) {
-        this.stock = stock;
+    public Stock(int amount) {
+        this.amount = amount;
     }
 
-    public void decreaseStock(int quantity) {
-        this.stock -= quantity;
+    /**
+     * 재고 수량을 감소시킨다.
+     *
+     * @param quantity 감소할 수량
+     * */
+    protected void decreaseStock(int quantity) {
+        this.amount -= quantity;
     }
 
-    public void rollbackStock(int quantity) {
-        this.stock += quantity;
+    /**
+     * 재고 수량을 롤백한다.
+     *
+     * @param quantity 롤백할 수량
+     * */
+    protected void rollbackStock(int quantity) {
+        this.amount += quantity;
     }
 }

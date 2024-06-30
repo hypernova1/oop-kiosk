@@ -1,29 +1,40 @@
 package kr.co._29cm.homework.cart.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import kr.co._29cm.homework.common.BaseUuidEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@Comment("장바구니")
+@Table(name = "cart", indexes = @Index(name = "idx_cart_user_id", columnList = "user_id"))
 public class Cart extends BaseUuidEntity {
 
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<CartItem> items = new ArrayList<>();
+
+    @Comment("유저 아이디")
+    @Column(name = "user_id", nullable = false, columnDefinition = "varchar(255)")
     private String userId;
 
     private Cart(String userId) {
         this.userId = userId;
     }
 
+    /**
+     * 장바구니를 생성한다.
+     *
+     * @param userId 유저 아이디
+     * @return 장바구니
+     * */
     public static Cart create(String userId) {
         return new Cart(userId);
     }
@@ -40,7 +51,7 @@ public class Cart extends BaseUuidEntity {
             optionalCartProduct.get().addQuantity(quantity);
             return;
         }
-        this.items.add(CartItem.of(productNo, quantity));
+        this.items.add(CartItem.of(this, productNo, quantity));
     }
 
     /**
@@ -71,3 +82,4 @@ public class Cart extends BaseUuidEntity {
         return this.items.isEmpty();
     }
 }
+

@@ -18,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -70,7 +71,6 @@ public class ProductService {
                 product.decreaseStock(quantityInfo.quantity());
             }
 
-            productRepository.save(products);
         } finally {
             lockManager.releaseList(lockKeys);
         }
@@ -99,8 +99,6 @@ public class ProductService {
 
                 product.rollbackStock(quantityInfo.quantity());
             }
-
-            productRepository.save(products);
         } finally {
             lockManager.releaseList(lockKeys);
         }

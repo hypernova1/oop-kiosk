@@ -3,24 +3,31 @@ package kr.co._29cm.homework.order.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import kr.co._29cm.homework.common.BaseUuidEntity;
 import kr.co._29cm.homework.order.payload.OrderRequestItem;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 @Getter
-@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "order_item")
+@Comment("주문 상품")
+@Entity
 public class OrderItem extends BaseUuidEntity {
 
-    @Column
+    @Comment("상품 번호")
+    @Column(name = "product_no", nullable = false, columnDefinition = "varchar(255)")
     private String productNo;
 
-    @Column
+    @Comment("상품 가격")
+    @Column(name = "product_price", nullable = false, columnDefinition = "int")
     private int productPrice;
 
-    @Column
+    @Comment("주문 수량")
+    @Column(name = "quantity", nullable = false, columnDefinition = "int")
     private int quantity;
 
     @ManyToOne

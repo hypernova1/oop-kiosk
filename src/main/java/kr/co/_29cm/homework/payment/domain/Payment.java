@@ -2,31 +2,40 @@ package kr.co._29cm.homework.payment.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import kr.co._29cm.homework.common.BaseUuidEntity;
-import kr.co._29cm.homework.order.domain.Order;
 import kr.co._29cm.homework.payment.payload.PaymentRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 @Getter
-@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Comment("결제 정보")
+@Table(name = "payment", indexes = @Index(name = "idx_payment_user_id", columnList = "user_id"))
+@Entity
 public class Payment extends BaseUuidEntity {
 
-    @Column
+    @Comment("상품 가격")
+    @Column(name = "product_price", nullable = false, columnDefinition = "int")
     private int productPrice;
 
-    @Column
+    @Comment("배송비")
+    @Column(name = "shipping_price", nullable = false, columnDefinition = "int")
     private int shippingPrice;
 
-    @Column
+    @Comment("결제 금액")
+    @Column(name = "total_paid_price", nullable = false, columnDefinition = "int")
     private int totalPaidPrice;
 
-    @Column
+    @Comment("주문 번호")
+    @Column(name = "order_no", nullable = false, columnDefinition = "varchar(14)")
     private String orderNo;
 
-    @Column
+    @Comment("유저 아이디")
+    @Column(name = "user_id", nullable = false, columnDefinition = "varchar(255)")
     private String userId;
 
     /**

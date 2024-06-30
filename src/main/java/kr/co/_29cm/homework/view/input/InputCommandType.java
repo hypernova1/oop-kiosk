@@ -5,18 +5,18 @@ public enum InputCommandType {
     CONTINUE_ORDER("o", "order"),
     TERMINATED_PROGRAM("q", "quit");
 
-    private final String fullCommand;
     private final String shortCommand;
+    private final String fullCommand;
 
-    InputCommandType(String fullCommand, String shortCommand) {
-        this.fullCommand = fullCommand;
+    InputCommandType(String shortCommand, String fullCommand) {
         this.shortCommand = shortCommand;
+        this.fullCommand = fullCommand;
     }
 
     public boolean equals(Command commandStr) {
         if (commandStr == null) {
             return false;
         }
-        return this.fullCommand.equals(commandStr.toString()) || this.shortCommand.equals(commandStr.toString());
+        return this.shortCommand.equals(commandStr.toString()) || this.fullCommand.equals(commandStr.toString());
     }
 }

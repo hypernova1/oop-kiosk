@@ -8,6 +8,7 @@ import kr.co._29cm.homework.product.payload.ProductPriceDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,16 +18,20 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "`order`")
+@Comment("주문 정보")
+@Table(name = "`order`", indexes = @Index(name = "idx_order_user_id", columnList = "user_id"))
 public class Order {
 
     @Id
+    @Comment("주문 번호")
+    @Column(name = "order_no", nullable = false, columnDefinition = "char(14)")
     private String orderNo;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private final List<OrderItem> items = new ArrayList<>();
 
-    @Column
+    @Comment("주문자 유저 아이디")
+    @Column(name = "user_id", nullable = false, columnDefinition = "varchar(255)")
     private String userId;
 
     private static final int FREE_SHIPPING_THRESHOLD = 50_000;
