@@ -9,8 +9,9 @@ import kr.co._29cm.homework.order.payload.OrderResponse;
 import kr.co._29cm.homework.payment.application.PaymentService;
 import kr.co._29cm.homework.payment.payload.PaymentResponse;
 import kr.co._29cm.homework.product.application.ProductService;
+import kr.co._29cm.homework.product.domain.ProductNotFoundException;
 import kr.co._29cm.homework.product.payload.ProductDto;
-import kr.co._29cm.homework.view.input.BadCommandException;
+import kr.co._29cm.homework.view.input.command.BadCommandException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,10 @@ public class OrderProcessHandler {
      * @param quantity 구매할 수량
      */
     public void addProductToCart(String userId, String productNo, int quantity) {
+        boolean existsProduct = this.productService.exists(productNo);
+        if (!existsProduct) {
+            throw new ProductNotFoundException(productNo);
+        }
         validateOrderData(productNo, quantity);
         cartService.addItem(userId, productNo, quantity);
     }
@@ -97,11 +102,11 @@ public class OrderProcessHandler {
     }
 
     /**
-     * 장바구니를 준비한다.
+     * 장바구니에 상품이 존재하는지 확인한다.
      *
      * @param userId 유저 아이디
      * */
-    public void loadCart(String userId) {
-        this.cartService.create(userId);
+    public boolean existCartItems(String userId) {
+        return this.cartService.existsCartItems(userId);
     }
 }

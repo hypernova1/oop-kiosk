@@ -2,7 +2,6 @@ package kr.co._29cm.homework.cart.application;
 
 import kr.co._29cm.homework.cart.domain.Cart;
 import kr.co._29cm.homework.cart.domain.CartItem;
-import kr.co._29cm.homework.cart.domain.CartNotFoundException;
 import kr.co._29cm.homework.cart.domain.CartRepository;
 import kr.co._29cm.homework.cart.payload.CartItemDto;
 import kr.co._29cm.homework.product.application.ProductService;
@@ -23,16 +22,6 @@ public class CartService {
     private final ProductService productService;
 
     /**
-     * 장바구니를 생성한다.
-     *
-     * @param userId 유저 아이디
-     * */
-    @Transactional
-    public void create(String userId) {
-        this.cartRepository.save(Cart.create(userId));
-    }
-
-    /**
      * 장바구니에 상품을 추가한다.
      *
      * @param userId 유저 아이디
@@ -41,7 +30,7 @@ public class CartService {
      * */
     @Transactional
     public void addItem(String userId, String productNo, int quantity) {
-        Cart cart = this.findOne(userId);
+        Cart cart = this.getOne(userId);
         cart.addItem(productNo, quantity);
     }
 
@@ -52,7 +41,7 @@ public class CartService {
      * */
     @Transactional
     public void clearCart(String userId) {
-        Cart cart = this.findOne(userId);
+        Cart cart = this.getOne(userId);
         cart.clear();
     }
 
@@ -63,7 +52,7 @@ public class CartService {
      * @return 장바구니에 담긴 상품 목록
      * */
     public List<CartItemDto> findItems(String userId) {
-        Cart cart = this.findOne(userId);
+        Cart cart = this.getOne(userId);
         List<String> productNoList = cart.getItems().stream().map(CartItem::getProductNo).toList();
         List<ProductDto> productDtoList = this.productService.findList(productNoList);
 
@@ -77,8 +66,24 @@ public class CartService {
                 .toList();
     }
 
-    private Cart findOne(String userId) {
-        return this.cartRepository.findByUserId(userId)
-                .orElseThrow(CartNotFoundException::new);
+    /**
+     * 장바구니를 가져온다. 없을시 생성한다.
+     *
+     * @param userId 유저 아이디
+     * @return 장바구니
+     * */
+    @Transactional
+    public Cart getOne(String userId) {
+        Cart cart = this.cartRepository.findByUserId(userId)
+                .orElse(null);
+        if (cart == null) {
+            cart = this.cartRepository.save(Cart.create(userId));
+        }
+        return cart;
+    }
+
+    public boolean existsCartItems(String userId) {
+        Cart cart = this.getOne(userId);
+        return !cart.isEmpty();
     }
 }

@@ -1,4 +1,4 @@
-package kr.co._29cm.homework.view.input;
+package kr.co._29cm.homework.view.input.command;
 
 import kr.co._29cm.homework.common.exception.NotNumberException;
 import kr.co._29cm.homework.util.NumberUtil;
@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
-public class Command {
+public class BufferedReaderCommand implements Command {
 
     private static final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
     private final String value;
 
-    private Command(String value) {
+    private BufferedReaderCommand(String value) {
         if (value == null) {
             throw new CommandNotFoundException();
         }
@@ -24,9 +24,9 @@ public class Command {
     /**
      * 명령을 호출한다.
      * */
-    protected static Command call() {
+    public static BufferedReaderCommand call() {
         try {
-            return new Command(READER.readLine());
+            return new BufferedReaderCommand(READER.readLine());
         } catch (IOException e) {
             throw new BadCommandException();
         }

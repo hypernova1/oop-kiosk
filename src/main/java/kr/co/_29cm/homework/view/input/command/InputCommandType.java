@@ -1,4 +1,4 @@
-package kr.co._29cm.homework.view.input;
+package kr.co._29cm.homework.view.input.command;
 
 public enum InputCommandType {
     COMPLETE_ORDER(" ", " "),
@@ -13,10 +13,10 @@ public enum InputCommandType {
         this.fullCommand = fullCommand;
     }
 
-    public boolean equals(Command commandStr) {
-        if (commandStr == null) {
+    public boolean equals(Command command) {
+        if (command == null) {
             return false;
         }
-        return this.shortCommand.equals(commandStr.toString()) || this.fullCommand.equals(commandStr.toString());
+        return this.shortCommand.equals(command.toString()) || this.fullCommand.equals(command.toString());
     }
 }

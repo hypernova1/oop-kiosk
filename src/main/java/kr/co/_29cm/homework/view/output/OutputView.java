@@ -1,20 +1,20 @@
 package kr.co._29cm.homework.view.output;
 
-import kr.co._29cm.homework.order.payload.OrderResponseItem;
 import kr.co._29cm.homework.order.payload.OrderResponse;
+import kr.co._29cm.homework.order.payload.OrderResponseItem;
 import kr.co._29cm.homework.product.payload.ProductDto;
 import kr.co._29cm.homework.util.NumberUtil;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-public class OutputView {
-
-    private OutputView() {}
+@Component
+public class OutputView implements Output {
 
     /**
      * 상품 목록을 출력한다.
      * */
-    public static void printProducts(List<ProductDto> productDtoList) {
+    public void printProducts(List<ProductDto> productDtoList) {
         System.out.printf("%-10s %-60s %10s %10s%n", "상품번호", "상품명", "판매가격", "재고수량");
         for (ProductDto product : productDtoList) {
             System.out.printf("%-10s %-60s %10d %10s",
@@ -29,7 +29,7 @@ public class OutputView {
     /**
      * 주문할 상품 목록을 출력한다.
      * */
-    public static void printOrderedProducts(List<OrderResponseItem> cartProducts) {
+    public void printOrderedProducts(List<OrderResponseItem> cartProducts) {
         System.out.println("주문 내역:");
         for (OrderResponseItem orderResponseItem : cartProducts) {
             System.out.println(orderResponseItem.name() + " - " + orderResponseItem.quantity() + "개");
@@ -40,7 +40,7 @@ public class OutputView {
     /**
      * 주문 정보를 출력한다.
      * */
-    public static void printOrderDetail(OrderResponse orderResponse) {
+    public void printOrderDetail(OrderResponse orderResponse) {
         printOrderedProducts(orderResponse.products());
         System.out.println("주문금액: " + NumberUtil.toMoneyFormat(orderResponse.productPrice()));
         if (orderResponse.shippingPrice() > 0) {
@@ -54,28 +54,28 @@ public class OutputView {
     /**
      * 감사 인사를 출력한다.
      * */
-    public static void printThanksToCustomer() {
+    public void printQuitMessage() {
         System.out.println("고객님 주문 감사합니다.");
     }
 
     /**
      * 잘못된 주문임을 알리는 메시지를 출력한다.
      * */
-    public static void printBadInput() {
+    public void printBadInput() {
         System.out.println("잘못된 주문 입력입니다.");
     }
 
     /**
      * 예외 발생 사항을 출력한다.
      * */
-    public static void printException(RuntimeException exception) {
+    public void printException(RuntimeException exception) {
         System.out.println(exception.getMessage());
     }
 
     /**
      * 구분선을 출력한다.
      * */
-    public static void printBorderLine() {
+    public void printBorderLine() {
         System.out.println("----------------------------------------");
     }
 }

@@ -94,4 +94,13 @@ public class ProductService {
                 .map(ProductDto::new)
                 .toList();
     }
+
+    /**
+     * 상품이 존재하는지 확인한다.
+     *
+     * @return 상품
+     * */
+    public boolean exists(String productNo) {
+        return this.productRepository.existsByProductNo(productNo);
+    }
 }

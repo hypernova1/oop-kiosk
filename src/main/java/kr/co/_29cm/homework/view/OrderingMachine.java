@@ -6,10 +6,11 @@ import kr.co._29cm.homework.order.payload.OrderResponse;
 import kr.co._29cm.homework.product.domain.ProductNotFoundException;
 import kr.co._29cm.homework.product.domain.SoldOutException;
 import kr.co._29cm.homework.product.payload.ProductDto;
-import kr.co._29cm.homework.view.input.BadCommandException;
-import kr.co._29cm.homework.view.input.Command;
-import kr.co._29cm.homework.view.input.InputView;
-import kr.co._29cm.homework.view.output.OutputView;
+import kr.co._29cm.homework.view.input.*;
+import kr.co._29cm.homework.view.input.command.BadCommandException;
+import kr.co._29cm.homework.view.input.command.Command;
+import kr.co._29cm.homework.view.input.command.CommandNotFoundException;
+import kr.co._29cm.homework.view.output.Output;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,44 +21,82 @@ import java.util.List;
 public class OrderingMachine {
 
     private final OrderProcessHandler orderProcessHandler;
+    private final Input input;
+    private final Output output;
 
 
     /**
      * 주문 프로세스를 시작한다.
      */
     public void process(String userId) {
-        orderProcessHandler.loadCart(userId);
-
-        List<ProductDto> products = orderProcessHandler.getAllProducts();
-        OutputView.printProducts(products);
-
-        while (true) {
+        printProducts();
+        OrderProcess orderProcess = OrderProcess.start();
+        boolean isRunning = true;
+        while (isRunning) {
             try {
-                Command productNoOrIsCompleteOrderInput = InputView.inputProductNoOrIsCompleteOrder();
-                if (!productNoOrIsCompleteOrderInput.isCompleteOrder()) {
-                    Command quantityInput = InputView.inputQuantity();
-                    String productNo = productNoOrIsCompleteOrderInput.toString();
-                    int quantity = quantityInput.toInt();
-                    orderProcessHandler.addProductToCart(userId, productNo, quantity);
-                    continue;
+                switch (orderProcess) {
+                    case ADD_PRODUCT -> orderProcess = addProduct(userId);
+                    case COMPLETE_ORDER -> orderProcess = completeOrder(userId);
+                    case CONTINUE_OR_QUIT -> orderProcess = continueOrderOrQuit();
+                    case QUIT -> isRunning = false;
                 }
-
-                OrderResponse orderResponse = orderProcessHandler.createOrder(userId);
-                OutputView.printOrderDetail(orderResponse);
-
-                boolean isProgramTerminated = InputView.inputPogramTerminatedOrOrderContinue().isProgramTerminated();
-                if (isProgramTerminated) {
-                    break;
-                }
-            } catch (BadCommandException | ProductNotFoundException | CartEmptyException | NoOrderItemException e) {
-                OutputView.printException(e);
-            } catch (SoldOutException e) {
-                OutputView.printException(e);
+            } catch (ProductNotFoundException | CartEmptyException | NoOrderItemException e) {
                 orderProcessHandler.clearCart(userId);
+                orderProcess = OrderProcess.ADD_PRODUCT;
+            } catch (SoldOutException e) {
+                output.printException(e);
+                orderProcessHandler.clearCart(userId);
+                orderProcess = OrderProcess.CONTINUE_OR_QUIT;
+            } catch (BadCommandException | CommandNotFoundException e) {
+                output.printException(e);
             }
         }
+        output.printQuitMessage();
+    }
 
-        OutputView.printThanksToCustomer();
+    /**
+     * 상품 목록을 출력한다.
+     * */
+    private void printProducts() {
+        List<ProductDto> products = orderProcessHandler.getAllProducts();
+        output.printProducts(products);
+    }
+
+    /**
+     * 장바구니에 상품을 추가한다.
+     *   " "를 입력받으면 해당 주문을 완료한다.
+     * */
+    protected OrderProcess addProduct(String userId) {
+        Command command = input.inputProductNoOrIsCompleteOrder();
+        if (command.isCompleteOrder()) {
+            if (this.orderProcessHandler.existCartItems(userId)) {
+                return OrderProcess.COMPLETE_ORDER;
+            }
+            return OrderProcess.CONTINUE_OR_QUIT;
+        }
+
+        String productNo = command.toString();
+        command = input.inputQuantity();
+        int quantity = command.toInt();
+        orderProcessHandler.addProductToCart(userId, productNo, quantity);
+        return OrderProcess.ADD_PRODUCT;
+    }
+
+    /**
+     * 주문을 완료한다.
+     * */
+    protected OrderProcess completeOrder(String userId) {
+        OrderResponse orderResponse = orderProcessHandler.createOrder(userId);
+        output.printOrderDetail(orderResponse);
+        return OrderProcess.CONTINUE_OR_QUIT;
+    }
+
+    /**
+     * 계속할지 종료할지를 선택한다.
+     * */
+    protected OrderProcess continueOrderOrQuit() {
+        boolean isProgramTerminated = input.inputProgramTerminatedOrOrderContinue().isProgramTerminated();
+        return isProgramTerminated ? OrderProcess.QUIT : OrderProcess.ADD_PRODUCT;
     }
 
 }
