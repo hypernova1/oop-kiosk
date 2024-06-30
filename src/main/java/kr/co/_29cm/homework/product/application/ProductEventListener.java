@@ -12,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -45,7 +43,7 @@ public class ProductEventListener {
                         .findFirst()
                         .orElseThrow(() -> new ProductNotFoundException(quantityInfo.productNo()));
 
-                product.rollbackStock(quantityInfo.quantity());
+                product.increaseStock(quantityInfo.quantity());
             }
         } finally {
             lockManager.releaseList(lockKeys);

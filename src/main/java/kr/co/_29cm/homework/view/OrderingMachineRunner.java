@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
 @RequiredArgsConstructor
 @Profile("!test")
+@Component
 public class OrderingMachineRunner implements CommandLineRunner {
 
     private final OrderingMachine orderingMachine;

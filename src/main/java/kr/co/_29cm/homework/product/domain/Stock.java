@@ -36,11 +36,11 @@ public class Stock extends BaseUuidEntity {
     }
 
     /**
-     * 재고 수량을 롤백한다.
+     * 재고 수량을 증가시킨다.
      *
-     * @param quantity 롤백할 수량
+     * @param quantity 증가시킬 수량
      * */
-    protected void rollbackStock(int quantity) {
+    protected void increaseStock(int quantity) {
         this.amount += quantity;
     }
 }

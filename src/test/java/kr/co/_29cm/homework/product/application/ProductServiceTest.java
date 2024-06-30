@@ -54,7 +54,6 @@ class ProductServiceTest {
         int stock = 50;
 
         Product product = new Product("10000", "테스트 상품", 10_000, new Stock(stock));
-
         List<ProductQuantityDto> productQuantityDtoList = new ArrayList<>();
         ProductQuantityDto productQuantityDto = new ProductQuantityDto(product.getProductNo(), 1);
         productQuantityDtoList.add(productQuantityDto);

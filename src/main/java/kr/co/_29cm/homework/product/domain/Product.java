@@ -49,12 +49,12 @@ public class Product {
     }
 
     /**
-     * 상품의 재고 수량을 롤백한다.
+     * 상품의 재고 수량을 증가시킨다.
      *
-     * @param quantity 롤백할 상품 수량
+     * @param quantity 증가시킬 상품 수량
      * */
-    public void rollbackStock(int quantity) {
-        this.stock.rollbackStock(quantity);
+    public void increaseStock(int quantity) {
+        this.stock.increaseStock(quantity);
     }
 
 }
