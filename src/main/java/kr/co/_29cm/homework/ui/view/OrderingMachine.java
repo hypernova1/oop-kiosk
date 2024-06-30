@@ -41,7 +41,7 @@ public class OrderingMachine {
                     case QUIT -> isRunning = false;
                 }
             } catch (ProductNotFoundException | CartEmptyException | NoOrderItemException e) {
-                orderProcessHandler.clearCart(userId);
+                output.printException(e);
                 orderProcess = OrderProcess.ADD_PRODUCT;
             } catch (SoldOutException e) {
                 output.printException(e);
