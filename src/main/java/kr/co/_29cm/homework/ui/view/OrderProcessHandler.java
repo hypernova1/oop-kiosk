@@ -1,4 +1,4 @@
-package kr.co._29cm.homework.view;
+package kr.co._29cm.homework.ui.view;
 
 import kr.co._29cm.homework.cart.application.CartService;
 import kr.co._29cm.homework.cart.payload.CartItemDto;
@@ -11,7 +11,7 @@ import kr.co._29cm.homework.payment.payload.PaymentResponse;
 import kr.co._29cm.homework.product.application.ProductService;
 import kr.co._29cm.homework.product.domain.ProductNotFoundException;
 import kr.co._29cm.homework.product.payload.ProductDto;
-import kr.co._29cm.homework.view.input.command.BadCommandException;
+import kr.co._29cm.homework.ui.input.command.BadCommandException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * 주문 프로세스를 담당하는 핸들러
  *
- * @see kr.co._29cm.homework.view.OrderingMachine
+ * @see OrderingMachine
  * */
 @Service
 @RequiredArgsConstructor

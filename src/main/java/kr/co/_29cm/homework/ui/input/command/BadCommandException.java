@@ -1,4 +1,4 @@
-package kr.co._29cm.homework.view.input.command;
+package kr.co._29cm.homework.ui.input.command;
 
 public class BadCommandException extends RuntimeException {
     public BadCommandException(String message) {

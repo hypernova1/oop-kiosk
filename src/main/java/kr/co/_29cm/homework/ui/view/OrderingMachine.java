@@ -1,4 +1,4 @@
-package kr.co._29cm.homework.view;
+package kr.co._29cm.homework.ui.view;
 
 import kr.co._29cm.homework.cart.domain.CartEmptyException;
 import kr.co._29cm.homework.order.domain.NoOrderItemException;
@@ -6,11 +6,11 @@ import kr.co._29cm.homework.order.payload.OrderResponse;
 import kr.co._29cm.homework.product.domain.ProductNotFoundException;
 import kr.co._29cm.homework.product.domain.SoldOutException;
 import kr.co._29cm.homework.product.payload.ProductDto;
-import kr.co._29cm.homework.view.input.*;
-import kr.co._29cm.homework.view.input.command.BadCommandException;
-import kr.co._29cm.homework.view.input.command.Command;
-import kr.co._29cm.homework.view.input.command.CommandNotFoundException;
-import kr.co._29cm.homework.view.output.Output;
+import kr.co._29cm.homework.ui.input.*;
+import kr.co._29cm.homework.ui.input.command.BadCommandException;
+import kr.co._29cm.homework.ui.input.command.Command;
+import kr.co._29cm.homework.ui.input.command.CommandNotFoundException;
+import kr.co._29cm.homework.ui.output.Output;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

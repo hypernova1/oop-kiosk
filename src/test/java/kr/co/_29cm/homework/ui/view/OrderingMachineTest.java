@@ -1,9 +1,9 @@
-package kr.co._29cm.homework.view;
+package kr.co._29cm.homework.ui.view;
 
-import kr.co._29cm.homework.view.input.Input;
-import kr.co._29cm.homework.view.input.OrderProcess;
-import kr.co._29cm.homework.view.input.command.Command;
-import kr.co._29cm.homework.view.output.Output;
+import kr.co._29cm.homework.ui.input.Input;
+import kr.co._29cm.homework.ui.input.OrderProcess;
+import kr.co._29cm.homework.ui.input.command.Command;
+import kr.co._29cm.homework.ui.output.Output;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

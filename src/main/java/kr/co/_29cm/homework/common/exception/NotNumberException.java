@@ -1,6 +1,6 @@
 package kr.co._29cm.homework.common.exception;
 
-import kr.co._29cm.homework.view.input.command.BadCommandException;
+import kr.co._29cm.homework.ui.input.command.BadCommandException;
 
 public class NotNumberException extends BadCommandException {
     public NotNumberException() {

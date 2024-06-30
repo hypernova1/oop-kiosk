@@ -1,4 +1,4 @@
-package kr.co._29cm.homework.view.input.command;
+package kr.co._29cm.homework.ui.input.command;
 
 import kr.co._29cm.homework.common.exception.NotNumberException;
 import kr.co._29cm.homework.util.NumberUtil;

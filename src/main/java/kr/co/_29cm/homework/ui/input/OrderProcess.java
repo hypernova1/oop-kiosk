@@ -1,4 +1,4 @@
-package kr.co._29cm.homework.view.input;
+package kr.co._29cm.homework.ui.input;
 
 public enum OrderProcess {
     ADD_PRODUCT,

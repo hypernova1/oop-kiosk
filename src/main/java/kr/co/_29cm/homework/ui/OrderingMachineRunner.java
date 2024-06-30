@@ -1,5 +1,6 @@
-package kr.co._29cm.homework.view;
+package kr.co._29cm.homework.ui;
 
+import kr.co._29cm.homework.ui.view.OrderingMachine;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;

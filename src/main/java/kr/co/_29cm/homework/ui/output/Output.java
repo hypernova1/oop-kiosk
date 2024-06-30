@@ -1,4 +1,4 @@
-package kr.co._29cm.homework.view.output;
+package kr.co._29cm.homework.ui.output;
 
 import kr.co._29cm.homework.order.payload.OrderResponse;
 import kr.co._29cm.homework.order.payload.OrderResponseItem;

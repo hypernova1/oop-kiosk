@@ -1,7 +1,7 @@
-package kr.co._29cm.homework.view.input;
+package kr.co._29cm.homework.ui.input;
 
-import kr.co._29cm.homework.view.input.command.BufferedReaderCommand;
-import kr.co._29cm.homework.view.input.command.Command;
+import kr.co._29cm.homework.ui.input.command.BufferedReaderCommand;
+import kr.co._29cm.homework.ui.input.command.Command;
 import org.springframework.stereotype.Component;
 
 @Component
