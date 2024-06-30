@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import kr.co._29cm.homework.common.BaseUuidEntity;
 import kr.co._29cm.homework.order.domain.Order;
+import kr.co._29cm.homework.payment.payload.PaymentRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,17 +32,16 @@ public class Payment extends BaseUuidEntity {
     /**
      * 주문 데이터를 기반으로 결제 정보를 생성한다.
      *
-     * @param order 주문 데이터
+     * @param paymentRequest 주문 데이터
      * @return 결제 정보
      * */
-    public static Payment from(Order order) {
+    public static Payment from(PaymentRequest paymentRequest) {
         Payment payment = new Payment();
-        payment.orderNo = order.getOrderNo();
-        payment.productPrice = order.getTotalProductPrice();
-        payment.shippingPrice = order.getShippingPrice();
+        payment.orderNo = paymentRequest.orderNo();
+        payment.productPrice = paymentRequest.productPrice();
+        payment.shippingPrice = paymentRequest.shippingPrice();
         payment.totalPaidPrice = payment.productPrice + payment.shippingPrice;
-        payment.orderNo = order.getOrderNo();
-        payment.userId = order.getUserId();
+        payment.userId = paymentRequest.userId();
         return payment;
     }
 

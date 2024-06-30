@@ -44,4 +44,8 @@ public class Product {
         this.stock.decreaseStock(quantity);
     }
 
+    public void rollbackStock(int quantity) {
+        this.stock.rollbackStock(quantity);
+    }
+
 }

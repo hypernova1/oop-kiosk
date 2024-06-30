@@ -5,6 +5,7 @@ import kr.co._29cm.homework.order.domain.Order;
 import kr.co._29cm.homework.order.domain.OrderRepository;
 import kr.co._29cm.homework.order.payload.OrderRequest;
 import kr.co._29cm.homework.payment.application.PaymentService;
+import kr.co._29cm.homework.payment.payload.PaymentRequest;
 import kr.co._29cm.homework.product.application.ProductService;
 import kr.co._29cm.homework.product.payload.ProductPriceDto;
 import kr.co._29cm.homework.product.payload.ProductQuantityDto;
@@ -28,7 +29,7 @@ public class OrderService {
      *
      * @param orderRequest 주문 정보
      * @return 주문 번호
-     * */
+     */
     @Transactional
     public String create(OrderRequest orderRequest) {
         if (orderRequest.products().isEmpty()) {
@@ -40,14 +41,26 @@ public class OrderService {
                 .toList();
         productService.decreaseStock(productQuantityDtoList);
 
-        List<String> productNoList = productQuantityDtoList.stream().map(ProductQuantityDto::productNo).toList();
-        List<ProductPriceDto> productPrices = productService.getProductPrices(productNoList);
+        try {
+            List<String> productNoList = productQuantityDtoList.stream().map(ProductQuantityDto::productNo).toList();
+            List<ProductPriceDto> productPrices = productService.getProductPrices(productNoList);
 
-        Order order = Order.of(orderRequest, productPrices);
+            Order order = Order.of(orderRequest, productPrices);
 
-        this.orderRepository.save(order);
-        this.paymentService.create(order);
-        return order.getOrderNo();
+            this.orderRepository.save(order);
+            this.paymentService.create(
+                    new PaymentRequest(
+                            order.getOrderNo(),
+                            order.getTotalProductPrice(),
+                            order.getShippingPrice(),
+                            order.getUserId()
+                    )
+            );
+            return order.getOrderNo();
+        } catch (RuntimeException e) {
+            this.productService.rollbackStock(productQuantityDtoList);
+            throw e;
+        }
     }
 
 }

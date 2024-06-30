@@ -1,9 +1,9 @@
 package kr.co._29cm.homework.payment.application;
 
-import kr.co._29cm.homework.order.domain.Order;
 import kr.co._29cm.homework.payment.domain.Payment;
 import kr.co._29cm.homework.payment.domain.PaymentNotFoundException;
 import kr.co._29cm.homework.payment.domain.PaymentRepository;
+import kr.co._29cm.homework.payment.payload.PaymentRequest;
 import kr.co._29cm.homework.payment.payload.PaymentResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,11 +19,11 @@ public class PaymentService {
     /**
      * 주문 정보를 기반으로 결제 정보를 생성한다.
      * 
-     * @param order 주문 정보
+     * @param request 주문 정보
      * */
     @Transactional
-    public void create(Order order) {
-        Payment payment = Payment.from(order);
+    public void create(PaymentRequest request) {
+        Payment payment = Payment.from(request);
         this.paymentRepository.save(payment);
     }
 

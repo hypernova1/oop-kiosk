@@ -23,4 +23,8 @@ public class Stock extends BaseUuidEntity {
     public void decreaseStock(int quantity) {
         this.stock -= quantity;
     }
+
+    public void rollbackStock(int quantity) {
+        this.stock += quantity;
+    }
 }

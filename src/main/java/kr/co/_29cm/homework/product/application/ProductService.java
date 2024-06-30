@@ -11,6 +11,8 @@ import kr.co._29cm.homework.product.payload.ProductPriceDto;
 import kr.co._29cm.homework.product.payload.ProductQuantityDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -47,6 +49,7 @@ public class ProductService {
      *
      * @param productQuantities 상품 수량 정보
      * */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void decreaseStock(List<ProductQuantityDto> productQuantities) {
         List<String> productNoList = productQuantities.stream()
                 .map(ProductQuantityDto::productNo)
@@ -65,6 +68,36 @@ public class ProductService {
                         .orElseThrow(() -> new ProductNotFoundException(quantityInfo.productNo()));
 
                 product.decreaseStock(quantityInfo.quantity());
+            }
+
+            productRepository.save(products);
+        } finally {
+            lockManager.releaseList(lockKeys);
+        }
+    }
+
+    /**
+     * 감소 시켰던 수량을 롤백 시킨다.
+     * */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void rollbackStock(List<ProductQuantityDto> productQuantities) {
+        List<String> productNoList = productQuantities.stream()
+                .map(ProductQuantityDto::productNo)
+                .toList();
+
+        List<String> lockKeys = LockKeyGenerator.generateLockKeyList(LockType.PRODUCT, productNoList);
+        try {
+            lockManager.acquireList(lockKeys);
+
+            List<Product> products = this.productRepository.findByProductNoIn(productNoList);
+
+            for (ProductQuantityDto quantityInfo : productQuantities) {
+                Product product = products.stream()
+                        .filter((p) -> p.getProductNo().equals(quantityInfo.productNo()))
+                        .findFirst()
+                        .orElseThrow(() -> new ProductNotFoundException(quantityInfo.productNo()));
+
+                product.rollbackStock(quantityInfo.quantity());
             }
 
             productRepository.save(products);
