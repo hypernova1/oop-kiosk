@@ -60,7 +60,6 @@ class ProductServiceTest {
         productQuantityDtoList.add(productQuantityDto);
 
         List<String> productNoList = productQuantityDtoList.stream().map(ProductQuantityDto::productNo).toList();
-
         List<Product> products = List.of(product);
 
         when(productRepository.findByProductNoIn(productNoList)).thenReturn(products);
