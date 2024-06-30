@@ -34,9 +34,6 @@ public class Order {
     @Column(name = "user_id", nullable = false, columnDefinition = "varchar(255)")
     private String userId;
 
-    private static final int FREE_SHIPPING_THRESHOLD = 50_000;
-    private static final int SHIPPING_PRICE = 2500;
-
     public static Order of(OrderRequest orderRequest, List<ProductPriceDto> productPriceDtos) {
         Order order = new Order();
         order.orderNo = generateOrderNo();
@@ -65,7 +62,7 @@ public class Order {
      * 무료 배송 조건이 맞는지 확인한다.
      * */
     public boolean isFreeShipping() {
-        return getTotalProductPrice() >= FREE_SHIPPING_THRESHOLD;
+        return getTotalProductPrice() >= OrderPolicy.FREE_SHIPPING_THRESHOLD;
     }
 
     /**
@@ -79,7 +76,7 @@ public class Order {
         if (isFreeShipping()) {
             return 0;
         }
-        return SHIPPING_PRICE;
+        return ShippingPolicy.SHIPPING_PRICE;
     }
 
     /**

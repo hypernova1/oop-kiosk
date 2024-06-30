@@ -45,7 +45,7 @@ public class Cart extends BaseUuidEntity {
      * @param productNo 상품 번호
      * @param quantity 주문 수량
      * */
-    public void addProduct(String productNo, int quantity) {
+    public void addItem(String productNo, int quantity) {
         Optional<CartItem> optionalCartProduct = findCartItem(productNo);
         if (optionalCartProduct.isPresent()) {
             optionalCartProduct.get().addQuantity(quantity);

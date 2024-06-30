@@ -42,7 +42,7 @@ public class CartService {
     @Transactional
     public void addItem(String userId, String productNo, int quantity) {
         Cart cart = this.findOne(userId);
-        cart.addProduct(productNo, quantity);
+        cart.addItem(productNo, quantity);
     }
 
     /**
