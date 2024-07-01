@@ -21,10 +21,13 @@ public class MemoryLockManagerMultiThreadTest {
     @Test
     @DisplayName("경쟁 상태 테스트")
     void race_condition() throws InterruptedException {
+        //given
         ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OR_THREADS);
         CountDownLatch latch = new CountDownLatch(NUMBER_OR_THREADS);
 
         Counter counter = new Counter();
+
+        //when
         for (int i = 0; i < NUMBER_OR_THREADS; i++) {
             executorService.execute(() -> {
                 for (int j = 0; j < LOOP_COUNT; j++) {
@@ -35,16 +38,21 @@ public class MemoryLockManagerMultiThreadTest {
         }
 
         latch.await();
+
+        //then
         assertThat(counter.getCount()).isNotEqualTo(NUMBER_OR_THREADS * LOOP_COUNT);
     }
 
     @Test
     @DisplayName("동시성 테스트")
     void concurrency_test() throws InterruptedException {
+        //given
         ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OR_THREADS);
         CountDownLatch latch = new CountDownLatch(NUMBER_OR_THREADS);
 
         Counter counter = new Counter();
+
+        //when
         for (int i = 0; i < NUMBER_OR_THREADS; i++) {
             executorService.execute(() -> {
                 memoryLockManager.acquire(LOCK_KEY);
@@ -57,12 +65,15 @@ public class MemoryLockManagerMultiThreadTest {
         }
 
         latch.await();
+
+        //then
         assertThat(counter.getCount()).isEqualTo(NUMBER_OR_THREADS * LOOP_COUNT);
     }
 
     @Test
     @DisplayName("호출 테스트")
     void call_count() throws InterruptedException {
+        //given
         class TestMemoryLockManager extends MemoryLockManager {
             public final AtomicInteger setCallCount = new AtomicInteger(0);
             public final AtomicInteger releaseCallCount = new AtomicInteger(0);
@@ -86,6 +97,8 @@ public class MemoryLockManagerMultiThreadTest {
         CountDownLatch latch = new CountDownLatch(NUMBER_OR_THREADS);
 
         Counter counter = new Counter();
+
+        //when
         for (int i = 0; i < NUMBER_OR_THREADS; i++) {
             executorService.execute(() -> {
                 testMemoryLockManager.acquire(LOCK_KEY);
@@ -99,6 +112,7 @@ public class MemoryLockManagerMultiThreadTest {
 
         latch.await();
 
+        //then
         assertThat(testMemoryLockManager.setCallCount.get()).isEqualTo(NUMBER_OR_THREADS);
         assertThat(testMemoryLockManager.releaseCallCount.get()).isEqualTo(NUMBER_OR_THREADS);
     }
