@@ -82,6 +82,12 @@ public class CartService {
         return cart;
     }
 
+    /**
+     * 장바구니에 상품이 존재하는 지 확인한다.
+     *
+     * @param userId 유저 아이디
+     * @return 장바구니 상품 존재 여부
+     * */
     public boolean existsCartItems(String userId) {
         Cart cart = this.getOne(userId);
         return !cart.isEmpty();

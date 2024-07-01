@@ -3,10 +3,10 @@ package kr.co._29cm.homework.common.lock;
 import java.util.List;
 
 public interface LockManager {
-    void set(String id);
-    void acquire(String id);
-    void acquireList(List<String> ids);
+    void set(String key);
+    void acquire(String key);
+    void acquireList(List<String> keys);
     void release(String id);
-    void releaseList(List<String> ids);
-    boolean exists(String id);
+    void releaseList(List<String> keys);
+    boolean exists(String key);
 }

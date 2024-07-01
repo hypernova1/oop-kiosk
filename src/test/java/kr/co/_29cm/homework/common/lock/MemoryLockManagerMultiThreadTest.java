@@ -85,8 +85,8 @@ public class MemoryLockManagerMultiThreadTest {
             }
 
             @Override
-            public void release(String id) {
-                super.release(id);
+            public void release(String key) {
+                super.release(key);
                 this.releaseCallCount.incrementAndGet();
             }
         }

@@ -49,17 +49,18 @@ public class OrderProcessHandler {
     }
 
     /**
-     * 주문을 생성하고 주문 번호를 반환한다.
+     * 주문을 생성하고 주문 정보를 반환한다.
      *
      * @param userId 유저 아이디
+     * @return 주문 정보
      */
     public OrderResponse createOrder(String userId) {
         List<CartItemDto> cartItems = this.cartService.findItems(userId);
 
-        List<OrderRequestItem> productQuantityInfos = cartItems.stream()
+        List<OrderRequestItem> orderRequestItems = cartItems.stream()
                 .map(cartItem -> new OrderRequestItem(cartItem.productNo(), cartItem.quantity()))
                 .toList();
-        OrderRequest orderRequest = new OrderRequest(productQuantityInfos, userId);
+        OrderRequest orderRequest = new OrderRequest(orderRequestItems, userId);
 
         String orderNo = orderService.create(orderRequest);
 
@@ -67,12 +68,12 @@ public class OrderProcessHandler {
 
         this.cartService.clearCart(userId);
 
-        List<String> productNoList = productQuantityInfos.stream()
+        List<String> productNoList = orderRequestItems.stream()
                 .map(OrderRequestItem::productNo)
                 .toList();
         List<ProductDto> productDtoList = productService.findList(productNoList);
 
-        return new OrderResponse(paymentResponse, productQuantityInfos, productDtoList);
+        return new OrderResponse(paymentResponse, orderRequestItems, productDtoList);
     }
 
     /**
@@ -107,6 +108,7 @@ public class OrderProcessHandler {
      * 장바구니에 상품이 존재하는지 확인한다.
      *
      * @param userId 유저 아이디
+     * @return 장바구니 상품 존재 여부
      * */
     public boolean existCartItems(String userId) {
         return this.cartService.existsCartItems(userId);

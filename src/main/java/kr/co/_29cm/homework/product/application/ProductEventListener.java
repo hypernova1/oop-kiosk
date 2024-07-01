@@ -23,6 +23,11 @@ public class ProductEventListener {
     private final LockManager lockManager;
     private final ProductRepository productRepository;
 
+    /**
+     * 재고를 롤백한다.
+     *
+     * @param event 재고 롤백 이벤트
+     * */
     @Async
     @EventListener
     public void rollbackStock(StockRollbackEvent event) {

@@ -34,10 +34,17 @@ public class Order {
     @Column(name = "user_id", nullable = false, columnDefinition = "varchar(255)")
     private String userId;
 
-    public static Order of(OrderRequest orderRequest, List<ProductPriceDto> productPriceDtos) {
+    /**
+     * 주문을 생성한다.
+     *
+     * @param orderRequest 주문 데이터
+     * @param productPrices 상품 가격 정보
+     * @return 주문
+     * */
+    public static Order of(OrderRequest orderRequest, List<ProductPriceDto> productPrices) {
         Order order = new Order();
         order.orderNo = generateOrderNo();
-        order.setOrderItems(orderRequest.products(), productPriceDtos);
+        order.setOrderItems(orderRequest.products(), productPrices);
         order.userId = orderRequest.userId();
         return order;
     }
@@ -46,10 +53,11 @@ public class Order {
      * 장바구니 상품 목록을 기반으로 주문 아이템 목록을 생성한다.
      *
      * @param orderRequestItems 장바구니 상품 목록
+     * @param productPrices 상품 가격 정보
      * */
-    private void setOrderItems(List<OrderRequestItem> orderRequestItems, List<ProductPriceDto> productPriceDtos) {
+    private void setOrderItems(List<OrderRequestItem> orderRequestItems, List<ProductPriceDto> productPrices) {
         for (OrderRequestItem orderRequestItem : orderRequestItems) {
-            ProductPriceDto productPriceDto = productPriceDtos.stream()
+            ProductPriceDto productPriceDto = productPrices.stream()
                     .filter((pi) -> pi.productNo().equals(orderRequestItem.productNo()))
                     .findFirst()
                     .orElseThrow(() -> new ProductNotFoundException(orderRequestItem.productNo()));

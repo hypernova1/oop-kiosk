@@ -1,5 +1,8 @@
 package kr.co._29cm.homework.common.lock;
 
+import lombok.Getter;
+
+@Getter
 public enum LockType {
     PRODUCT("PRODUCT");
 
@@ -9,7 +12,4 @@ public enum LockType {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
 }

@@ -4,6 +4,7 @@ import kr.co._29cm.homework.order.domain.NoOrderItemException;
 import kr.co._29cm.homework.order.domain.Order;
 import kr.co._29cm.homework.order.domain.OrderRepository;
 import kr.co._29cm.homework.order.payload.OrderRequest;
+import kr.co._29cm.homework.order.payload.OrderRequestItem;
 import kr.co._29cm.homework.payment.application.PaymentService;
 import kr.co._29cm.homework.payment.payload.PaymentRequest;
 import kr.co._29cm.homework.product.application.ProductService;
@@ -45,7 +46,7 @@ public class OrderService {
         productService.decreaseStock(productQuantityDtoList);
 
         try {
-            return createOrder(orderRequest, productQuantityDtoList);
+            return createOrder(orderRequest);
         } catch (RuntimeException e) {
             this.eventPublisher.publishEvent(new StockRollbackEvent(productQuantityDtoList));
             throw e;
@@ -56,11 +57,10 @@ public class OrderService {
      * 주문을 생성한다.
      *
      * @param orderRequest 주문 요청 데이터
-     * @param productQuantities 주문할 상품 재고 데이터
      * @return 주문 번호
      * */
-    private String createOrder(OrderRequest orderRequest, List<ProductQuantityDto> productQuantities) {
-        List<String> productNoList = productQuantities.stream().map(ProductQuantityDto::productNo).toList();
+    private String createOrder(OrderRequest orderRequest) {
+        List<String> productNoList = orderRequest.products().stream().map(OrderRequestItem::productNo).toList();
         List<ProductPriceDto> productPrices = productService.getProductPrices(productNoList);
 
         Order order = Order.of(orderRequest, productPrices);

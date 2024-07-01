@@ -31,6 +31,7 @@ public class OutputView implements Output {
      * */
     public void printOrderedProducts(List<OrderResponseItem> cartProducts) {
         System.out.println("주문 내역:");
+        printBorderLine();
         for (OrderResponseItem orderResponseItem : cartProducts) {
             System.out.println(orderResponseItem.name() + " - " + orderResponseItem.quantity() + "개");
         }

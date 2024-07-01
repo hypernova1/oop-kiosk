@@ -78,6 +78,12 @@ public class ProductService {
                 .toList();
     }
 
+    /**
+     * 상품 목록을 조회한다.
+     *
+     * @param productNoList 상품 번호 목록
+     * @return 상품 정보 목록
+     * */
     public List<ProductDto> findList(List<String> productNoList) {
         return this.productRepository.findByProductNoIn(productNoList).stream()
                 .map(ProductDto::new)
@@ -87,6 +93,7 @@ public class ProductService {
     /**
      * 상품이 존재하는지 확인한다.
      *
+     * @param productNo 상품 번호
      * @return 상품
      */
     public boolean exists(String productNo) {

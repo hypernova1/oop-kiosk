@@ -30,7 +30,7 @@ public class PaymentService {
     /**
      * 주문번호로 결제 정보를 찾는다.
      *
-     * @param 주문 번호
+     * @param orderNo 주문 번호
      * @return 결제 정보
      * */
     public PaymentResponse findOne(String orderNo) {
