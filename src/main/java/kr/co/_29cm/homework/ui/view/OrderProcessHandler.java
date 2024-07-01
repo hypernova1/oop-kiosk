@@ -55,12 +55,14 @@ public class OrderProcessHandler {
      */
     public OrderResponse createOrder(String userId) {
         List<CartItemDto> cartItems = this.cartService.findItems(userId);
+
         List<OrderRequestItem> productQuantityInfos = cartItems.stream()
                 .map(cartItem -> new OrderRequestItem(cartItem.productNo(), cartItem.quantity()))
                 .toList();
-
         OrderRequest orderRequest = new OrderRequest(productQuantityInfos, userId);
+
         String orderNo = orderService.create(orderRequest);
+
         PaymentResponse paymentResponse = paymentService.findOne(orderNo);
 
         this.cartService.clearCart(userId);

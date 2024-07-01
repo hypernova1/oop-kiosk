@@ -56,7 +56,7 @@ public class OrderingMachine {
 
     /**
      * 상품 목록을 출력한다.
-     * */
+     */
     private void printProducts() {
         List<ProductDto> products = orderProcessHandler.getAllProducts();
         output.printProducts(products);
@@ -64,27 +64,27 @@ public class OrderingMachine {
 
     /**
      * 장바구니에 상품을 추가한다.
-     *   " "를 입력받으면 해당 주문을 완료한다.
-     * */
+     * " "를 입력받으면 해당 주문을 완료한다.
+     */
     protected OrderProcess addProduct(String userId) {
         Command command = input.inputProductNoOrIsCompleteOrder();
-        if (command.isCompleteOrder()) {
-            if (this.orderProcessHandler.existCartItems(userId)) {
-                return OrderProcess.COMPLETE_ORDER;
-            }
-            return OrderProcess.CONTINUE_OR_QUIT;
+        if (!command.isCompleteOrder()) {
+            String productNo = command.toString();
+            command = input.inputQuantity();
+            int quantity = command.toInt();
+            orderProcessHandler.addProductToCart(userId, productNo, quantity);
+            return OrderProcess.ADD_PRODUCT;
         }
 
-        String productNo = command.toString();
-        command = input.inputQuantity();
-        int quantity = command.toInt();
-        orderProcessHandler.addProductToCart(userId, productNo, quantity);
-        return OrderProcess.ADD_PRODUCT;
+        if (this.orderProcessHandler.existCartItems(userId)) {
+            return OrderProcess.COMPLETE_ORDER;
+        }
+        return OrderProcess.CONTINUE_OR_QUIT;
     }
 
     /**
      * 주문을 완료한다.
-     * */
+     */
     protected OrderProcess completeOrder(String userId) {
         OrderResponse orderResponse = orderProcessHandler.createOrder(userId);
         output.printOrderDetail(orderResponse);
@@ -93,7 +93,7 @@ public class OrderingMachine {
 
     /**
      * 계속할지 종료할지를 선택한다.
-     * */
+     */
     protected OrderProcess continueOrderOrQuit() {
         boolean isProgramTerminated = input.inputProgramTerminatedOrOrderContinue().isProgramTerminated();
         return isProgramTerminated ? OrderProcess.QUIT : OrderProcess.ADD_PRODUCT;

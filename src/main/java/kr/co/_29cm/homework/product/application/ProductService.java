@@ -28,28 +28,17 @@ public class ProductService {
      * 모든 상품을 가져온다.
      *
      * @return 모든 상품 정보
-     * */
+     */
     public List<ProductDto> getAll() {
         List<Product> products = this.productRepository.findAll();
         return products.stream().map(ProductDto::new).toList();
     }
 
     /**
-     * 상품 번호로 상품을 조회한다.
-     *
-     * @return 상품
-     * */
-    public ProductDto findOne(String productNo) {
-        Product product = this.productRepository.findByProductNo(productNo)
-                .orElseThrow(() -> new ProductNotFoundException(productNo));
-        return new ProductDto(product);
-    }
-
-    /**
      * 상품의 수량을 감소시킨다.
      *
      * @param productQuantities 상품 수량 정보
-     * */
+     */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void decreaseStock(List<ProductQuantityDto> productQuantities) {
         List<String> productNoList = productQuantities.stream()
@@ -80,7 +69,7 @@ public class ProductService {
      *
      * @param productNoList 상품 번호 목록
      * @return 상품 가격 정보 목록
-     * */
+     */
     public List<ProductPriceDto> getProductPrices(List<String> productNoList) {
         List<Product> products = this.productRepository.findByProductNoIn(productNoList);
 
@@ -99,7 +88,7 @@ public class ProductService {
      * 상품이 존재하는지 확인한다.
      *
      * @return 상품
-     * */
+     */
     public boolean exists(String productNo) {
         return this.productRepository.existsByProductNo(productNo);
     }
