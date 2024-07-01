@@ -19,4 +19,4 @@ spring:
   logging:
     level:
       root: INFO
-      kr.co._29cm.homework: DEBUG
+      kr.co._29cm.homework: INFO

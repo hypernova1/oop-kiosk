@@ -55,9 +55,7 @@ class ProductServiceTest {
         int NUMBER_OR_THREADS = 500;
         int LOOP_COUNT = 100;
 
-        List<ProductQuantityDto> productQuantityDtoList = new ArrayList<>();
-        ProductQuantityDto productQuantityDto = new ProductQuantityDto(PRODUCT_NO, 1);
-        productQuantityDtoList.add(productQuantityDto);
+        List<ProductQuantityDto> productQuantityDtoList = List.of(new ProductQuantityDto(PRODUCT_NO, 1));
 
         ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OR_THREADS);
         CountDownLatch latch = new CountDownLatch(NUMBER_OR_THREADS);
