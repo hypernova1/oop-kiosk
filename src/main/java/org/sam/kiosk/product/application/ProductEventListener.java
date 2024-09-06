@@ -10,6 +10,9 @@ import org.sam.kiosk.product.application.payload.ProductQuantityDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -27,9 +30,10 @@ public class ProductEventListener {
      * 재고를 롤백한다.
      *
      * @param event 재고 롤백 이벤트
-     * */
+     */
     @Async
     @EventListener
+    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000, maxDelay = 3000, multiplier = 2.0), recover = "sendRollbackError")
     public void rollbackStock(StockRollbackEvent event) {
         log.error("rollback stock");
         List<String> productNoList = event.productQuantities().stream()
@@ -53,6 +57,14 @@ public class ProductEventListener {
         } finally {
             lockManager.releaseList(lockKeys);
         }
+    }
+
+    /**
+     * 롤백 실패시 에러를 전파한다.
+     * */
+    @Recover
+    public void sendRollbackError(Exception e) {
+        log.error("send error - {}", e.getMessage(), e);
     }
 
 }
