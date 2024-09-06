@@ -1,3 +1,3 @@
-package org.sam.kiosk.product.payload;
+package org.sam.kiosk.product.application.payload;
 
 public record ProductPriceDto(String productNo, Integer price) {}

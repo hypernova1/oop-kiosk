@@ -1,8 +1,8 @@
 package org.sam.kiosk.ui.output;
 
-import org.sam.kiosk.order.payload.OrderResponse;
-import org.sam.kiosk.order.payload.OrderResponseItem;
-import org.sam.kiosk.product.payload.ProductDto;
+import org.sam.kiosk.order.application.payload.OrderResponse;
+import org.sam.kiosk.order.application.payload.OrderResponseItem;
+import org.sam.kiosk.product.application.payload.ProductDto;
 import org.sam.kiosk.util.NumberUtil;
 import org.springframework.stereotype.Component;
 

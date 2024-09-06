@@ -1,4 +1,4 @@
-package org.sam.kiosk.product.infra;
+package org.sam.kiosk.product.adapter.out;
 
 import org.sam.kiosk.product.domain.Product;
 import org.sam.kiosk.product.domain.ProductRepository;

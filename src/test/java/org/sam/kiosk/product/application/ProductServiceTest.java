@@ -6,7 +6,7 @@ import org.sam.kiosk.product.domain.Product;
 import org.sam.kiosk.product.domain.ProductRepository;
 import org.sam.kiosk.product.domain.SoldOutException;
 import org.sam.kiosk.product.domain.Stock;
-import org.sam.kiosk.product.payload.ProductQuantityDto;
+import org.sam.kiosk.product.application.payload.ProductQuantityDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

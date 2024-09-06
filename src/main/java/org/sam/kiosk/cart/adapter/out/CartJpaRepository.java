@@ -1,4 +1,4 @@
-package org.sam.kiosk.cart.infra;
+package org.sam.kiosk.cart.adapter.out;
 
 import org.sam.kiosk.cart.domain.Cart;
 import org.sam.kiosk.cart.domain.CartRepository;

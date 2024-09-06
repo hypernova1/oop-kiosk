@@ -1,4 +1,4 @@
-package org.sam.kiosk.order.infra;
+package org.sam.kiosk.order.adapter.out;
 
 import org.sam.kiosk.order.domain.Order;
 import org.sam.kiosk.order.domain.OrderRepository;

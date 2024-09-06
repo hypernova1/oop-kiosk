@@ -1,4 +1,4 @@
-package org.sam.kiosk.payment.infra;
+package org.sam.kiosk.payment.adapter.out;
 
 import org.sam.kiosk.payment.domain.Payment;
 import org.sam.kiosk.payment.domain.PaymentRepository;

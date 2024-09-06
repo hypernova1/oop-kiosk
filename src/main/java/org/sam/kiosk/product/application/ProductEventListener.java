@@ -6,7 +6,7 @@ import org.sam.kiosk.common.lock.LockType;
 import org.sam.kiosk.product.domain.Product;
 import org.sam.kiosk.product.domain.ProductNotFoundException;
 import org.sam.kiosk.product.domain.ProductRepository;
-import org.sam.kiosk.product.payload.ProductQuantityDto;
+import org.sam.kiosk.product.application.payload.ProductQuantityDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

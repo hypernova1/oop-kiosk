@@ -2,13 +2,13 @@ package org.sam.kiosk.order.application;
 
 import org.sam.kiosk.order.domain.Order;
 import org.sam.kiosk.order.domain.OrderRepository;
-import org.sam.kiosk.order.payload.OrderRequest;
-import org.sam.kiosk.order.payload.OrderRequestItem;
+import org.sam.kiosk.order.application.payload.OrderRequest;
+import org.sam.kiosk.order.application.payload.OrderRequestItem;
 import org.sam.kiosk.payment.application.PaymentService;
 import org.sam.kiosk.product.application.ProductService;
 import org.sam.kiosk.product.application.StockRollbackEvent;
-import org.sam.kiosk.product.payload.ProductPriceDto;
-import org.sam.kiosk.product.payload.ProductQuantityDto;
+import org.sam.kiosk.product.application.payload.ProductPriceDto;
+import org.sam.kiosk.product.application.payload.ProductQuantityDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

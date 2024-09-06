@@ -1,4 +1,4 @@
-package org.sam.kiosk.order.payload;
+package org.sam.kiosk.order.application.payload;
 
 import java.util.List;
 

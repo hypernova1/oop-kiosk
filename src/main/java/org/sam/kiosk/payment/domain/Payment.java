@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import org.sam.kiosk.common.BaseUuidEntity;
-import org.sam.kiosk.payment.payload.PaymentRequest;
+import org.sam.kiosk.payment.application.payload.PaymentRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

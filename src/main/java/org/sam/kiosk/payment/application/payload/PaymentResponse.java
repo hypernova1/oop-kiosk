@@ -1,4 +1,4 @@
-package org.sam.kiosk.payment.payload;
+package org.sam.kiosk.payment.application.payload;
 
 import org.sam.kiosk.payment.domain.Payment;
 

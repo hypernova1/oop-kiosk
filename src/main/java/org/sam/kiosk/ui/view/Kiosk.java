@@ -2,10 +2,10 @@ package org.sam.kiosk.ui.view;
 
 import org.sam.kiosk.cart.domain.CartEmptyException;
 import org.sam.kiosk.order.domain.NoOrderItemException;
-import org.sam.kiosk.order.payload.OrderResponse;
+import org.sam.kiosk.order.application.payload.OrderResponse;
 import org.sam.kiosk.product.domain.ProductNotFoundException;
 import org.sam.kiosk.product.domain.SoldOutException;
-import org.sam.kiosk.product.payload.ProductDto;
+import org.sam.kiosk.product.application.payload.ProductDto;
 import org.sam.kiosk.ui.input.Input;
 import org.sam.kiosk.ui.input.command.BadCommandException;
 import org.sam.kiosk.ui.input.command.Command;

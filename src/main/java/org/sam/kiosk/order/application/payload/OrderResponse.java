@@ -1,8 +1,8 @@
-package org.sam.kiosk.order.payload;
+package org.sam.kiosk.order.application.payload;
 
-import org.sam.kiosk.payment.payload.PaymentResponse;
+import org.sam.kiosk.payment.application.payload.PaymentResponse;
 import org.sam.kiosk.product.domain.ProductNotFoundException;
-import org.sam.kiosk.product.payload.ProductDto;
+import org.sam.kiosk.product.application.payload.ProductDto;
 
 import java.util.List;
 

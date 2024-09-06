@@ -1,4 +1,4 @@
-package org.sam.kiosk.product.payload;
+package org.sam.kiosk.product.application.payload;
 
 import org.sam.kiosk.product.domain.Product;
 

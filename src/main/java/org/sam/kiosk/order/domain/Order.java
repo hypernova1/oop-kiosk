@@ -1,10 +1,10 @@
 package org.sam.kiosk.order.domain;
 
 import jakarta.persistence.*;
-import org.sam.kiosk.order.payload.OrderRequest;
-import org.sam.kiosk.order.payload.OrderRequestItem;
+import org.sam.kiosk.order.application.payload.OrderRequest;
+import org.sam.kiosk.order.application.payload.OrderRequestItem;
 import org.sam.kiosk.product.domain.ProductNotFoundException;
-import org.sam.kiosk.product.payload.ProductPriceDto;
+import org.sam.kiosk.product.application.payload.ProductPriceDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
