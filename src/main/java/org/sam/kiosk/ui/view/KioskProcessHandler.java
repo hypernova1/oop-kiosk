@@ -20,11 +20,11 @@ import java.util.List;
 /**
  * 주문 프로세스를 담당하는 핸들러
  *
- * @see OrderingMachine
+ * @see Kiosk
  * */
 @Service
 @RequiredArgsConstructor
-public class OrderProcessHandler {
+public class KioskProcessHandler {
 
     private final ProductService productService;
     private final OrderService orderService;

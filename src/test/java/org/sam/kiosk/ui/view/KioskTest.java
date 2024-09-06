@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class OrderingMachineTest {
+class KioskTest {
 
     @Mock
     private Input input;
@@ -26,16 +26,16 @@ class OrderingMachineTest {
     private Output output;
 
     @Mock
-    private OrderProcessHandler orderProcessHandler;
+    private KioskProcessHandler kioskProcessHandler;
 
     @InjectMocks
-    private OrderingMachine orderingMachine;
+    private Kiosk kiosk;
 
     private final String USER_ID = UUID.randomUUID().toString();
 
     @BeforeEach
     void setUp() {
-        this.orderingMachine = new OrderingMachine(orderProcessHandler, input, output);
+        this.kiosk = new Kiosk(kioskProcessHandler, input, output);
     }
 
     @DisplayName("상품 추가 케이스")
@@ -54,10 +54,10 @@ class OrderingMachineTest {
         when(quantityCommand.toInt()).thenReturn(1);
         when(input.inputQuantity()).thenReturn(quantityCommand);
 
-        doNothing().when(orderProcessHandler).addProductToCart(USER_ID, PRODUCT_ID, 1);
+        doNothing().when(kioskProcessHandler).addProductToCart(USER_ID, PRODUCT_ID, 1);
 
         //when
-        OrderProcess orderProcess = orderingMachine.addProduct(USER_ID);
+        OrderProcess orderProcess = kiosk.addProduct(USER_ID);
 
         //then
         assertThat(orderProcess).isEqualTo(OrderProcess.ADD_PRODUCT);
@@ -71,10 +71,10 @@ class OrderingMachineTest {
 
         when(command.isCompleteOrder()).thenReturn(true);
         when(input.inputProductNoOrIsCompleteOrder()).thenReturn(command);
-        when(orderProcessHandler.existCartItems(USER_ID)).thenReturn(true);
+        when(kioskProcessHandler.existCartItems(USER_ID)).thenReturn(true);
 
         //when
-        OrderProcess orderProcess = orderingMachine.addProduct(USER_ID);
+        OrderProcess orderProcess = kiosk.addProduct(USER_ID);
 
         //then
         assertThat(orderProcess).isEqualTo(OrderProcess.COMPLETE_ORDER);
@@ -88,10 +88,10 @@ class OrderingMachineTest {
 
         when(command.isCompleteOrder()).thenReturn(true);
         when(input.inputProductNoOrIsCompleteOrder()).thenReturn(command);
-        when(orderProcessHandler.existCartItems(USER_ID)).thenReturn(false);
+        when(kioskProcessHandler.existCartItems(USER_ID)).thenReturn(false);
 
         //when
-        OrderProcess orderProcess = orderingMachine.addProduct(USER_ID);
+        OrderProcess orderProcess = kiosk.addProduct(USER_ID);
 
         //then
         assertThat(orderProcess).isEqualTo(OrderProcess.CONTINUE_OR_QUIT);

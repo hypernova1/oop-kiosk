@@ -6,7 +6,6 @@ import org.sam.kiosk.order.payload.OrderResponse;
 import org.sam.kiosk.product.domain.ProductNotFoundException;
 import org.sam.kiosk.product.domain.SoldOutException;
 import org.sam.kiosk.product.payload.ProductDto;
-import kr.co._29cm.homework.ui.input.*;
 import org.sam.kiosk.ui.input.Input;
 import org.sam.kiosk.ui.input.command.BadCommandException;
 import org.sam.kiosk.ui.input.command.Command;
@@ -19,9 +18,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OrderingMachine {
+public class Kiosk {
 
-    private final OrderProcessHandler orderProcessHandler;
+    private final KioskProcessHandler kioskProcessHandler;
     private final Input input;
     private final Output output;
 
@@ -46,7 +45,7 @@ public class OrderingMachine {
                 orderProcess = OrderProcess.ADD_PRODUCT;
             } catch (SoldOutException e) {
                 output.printException(e);
-                orderProcessHandler.clearCart(userId);
+                kioskProcessHandler.clearCart(userId);
                 orderProcess = OrderProcess.CONTINUE_OR_QUIT;
             } catch (BadCommandException | CommandNotFoundException e) {
                 output.printException(e);
@@ -59,7 +58,7 @@ public class OrderingMachine {
      * 상품 목록을 출력한다.
      */
     private void printProducts() {
-        List<ProductDto> products = orderProcessHandler.getAllProducts();
+        List<ProductDto> products = kioskProcessHandler.getAllProducts();
         output.printProducts(products);
     }
 
@@ -73,11 +72,11 @@ public class OrderingMachine {
             String productNo = command.toString();
             command = input.inputQuantity();
             int quantity = command.toInt();
-            orderProcessHandler.addProductToCart(userId, productNo, quantity);
+            kioskProcessHandler.addProductToCart(userId, productNo, quantity);
             return OrderProcess.ADD_PRODUCT;
         }
 
-        if (this.orderProcessHandler.existCartItems(userId)) {
+        if (this.kioskProcessHandler.existCartItems(userId)) {
             return OrderProcess.COMPLETE_ORDER;
         }
         return OrderProcess.CONTINUE_OR_QUIT;
@@ -87,7 +86,7 @@ public class OrderingMachine {
      * 주문을 완료한다.
      */
     protected OrderProcess completeOrder(String userId) {
-        OrderResponse orderResponse = orderProcessHandler.createOrder(userId);
+        OrderResponse orderResponse = kioskProcessHandler.createOrder(userId);
         output.printOrderDetail(orderResponse);
         return OrderProcess.CONTINUE_OR_QUIT;
     }
