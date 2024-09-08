@@ -1,4 +1,4 @@
-package org.sam.kiosk.util;
+package org.sam.kiosk.common.util;
 
 import java.text.DecimalFormat;
 

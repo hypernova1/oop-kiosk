@@ -1,7 +1,7 @@
 package org.sam.kiosk.ui.input.command;
 
 import org.sam.kiosk.common.exception.NotNumberException;
-import org.sam.kiosk.util.NumberUtil;
+import org.sam.kiosk.common.util.NumberUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
